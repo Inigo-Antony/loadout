@@ -12,3 +12,7 @@ pro/
 
 # Local-only test installs
 test-install/
+
+# Claude Code session helper + local-only settings
+resume-session
+.claude/settings.local.json
