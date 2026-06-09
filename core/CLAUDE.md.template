@@ -1,0 +1,30 @@
+# Operator Context
+
+## Who I am
+
+{{NAME}}. {{ROLE}}{{#DOMAIN}} — {{DOMAIN}}{{/DOMAIN}}. {{BACKGROUND}}{{#GOALS}} Current focus: {{GOALS}}.{{/GOALS}}
+
+## Voice
+
+{{VOICE_STYLE}}
+
+Defaults if unspecified: lead with the answer, justify after. No filler ("great question", "I hope this helps", "let me know if..."). Specific verbs over weak ones. Acknowledge gaps honestly. Show working for technical claims — numbers, units, sources. The reader will check.
+
+## Tooling
+
+- Primary OS: {{PRIMARY_OS}}
+- Default language: {{DEFAULT_LANGUAGE}}
+- {{TOOLING_NOTES}}
+- All assets in markdown, version-controlled
+
+## Standing rules
+
+- **Plan before executing** on any non-trivial task (Shift+Tab in Claude Code). Ask until 95% confident before acting.
+- **Minimal targeted edits** when modifying existing files. Generate complete new files only on explicit ask ("write it", "generate", "create").
+- **Skills > CLAUDE.md** for anything that doesn't need to fire every turn (progressive disclosure).
+- **Watch context.** `/context` regularly. `/compact` at 60%, not 90%. `/clear` between unrelated tasks.
+- **No bullet-point soup** in prose responses. Structure when it earns its place; otherwise paragraphs.
+
+## Skill index
+
+Skills live in `.claude/skills/` and auto-discover by frontmatter. Categories: `thinking/` (cognitive), `operating/` (how to work with Claude), domain-specific files at the top level. See `pitfalls.md` for anti-patterns. Invoke `skill-creator` to author a new skill from a successful run; invoke other meta-skills (e.g. `monetize-or-opensource`) when their triggers fire.

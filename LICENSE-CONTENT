@@ -1,0 +1,54 @@
+Creative Commons Attribution 4.0 International (CC-BY-4.0)
+
+This license applies to all skill markdown content in this repository:
+  - core/CLAUDE.md.template and core/pitfalls.md
+  - All .md files under core/skills/, domains/, business/, meta/
+  - All .md files under ecosystem/
+
+Code (install.sh, wizard.sh, any future CLI / build tooling) is licensed
+separately under Apache-2.0 — see LICENSE.
+
+----
+
+Copyright (c) 2026 Loadout contributors
+
+You are free to:
+
+  * Share — copy and redistribute the material in any medium or format
+  * Adapt — remix, transform, and build upon the material
+            for any purpose, even commercially.
+
+Under the following terms:
+
+  * Attribution — You must give appropriate credit, provide a link to the
+                  license, and indicate if changes were made. You may do so
+                  in any reasonable manner, but not in any way that suggests
+                  the licensor endorses you or your use.
+
+  * No additional restrictions — You may not apply legal terms or
+                  technological measures that legally restrict others from
+                  doing anything the license permits.
+
+Notices:
+
+  You do not have to comply with the license for elements of the material
+  in the public domain or where your use is permitted by an applicable
+  exception or limitation.
+
+  No warranties are given. The license may not give you all of the
+  permissions necessary for your intended use. For example, other rights
+  such as publicity, privacy, or moral rights may limit how you use the
+  material.
+
+----
+
+Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+
+Attribution suggestion:
+
+  "Includes content from Loadout (https://loadout.dev), licensed under
+   CC-BY-4.0."
+
+Note on the Loadout name and logo: trademark rights are reserved separately
+from this content license. See TRADEMARK.md for the brand-usage policy.

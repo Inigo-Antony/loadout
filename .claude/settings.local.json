@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /tmp/test-project)",
+      "Bash(bash /workspace/install.sh /tmp/test-project --preset saas-launch)"
+    ]
+  }
+}

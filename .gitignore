@@ -1,0 +1,14 @@
+# Pro tier — private until the paid product launches; never commit publicly
+pro/
+
+# Brainstorm / design records (keep local, don't ship in OSS)
+.brainstorm/
+
+# OS / editor noise
+.DS_Store
+*.swp
+*.bak
+*.tmp
+
+# Local-only test installs
+test-install/
