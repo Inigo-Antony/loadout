@@ -1,5 +1,5 @@
 {
-  "name": "agent-resources",
+  "name": "loadout",
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
