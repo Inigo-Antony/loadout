@@ -1,10 +1,34 @@
 # Loadout
 
-A modular library of operating instructions for Claude Code, with skill bodies portable to Claude web/desktop Projects. The library is the master source; each project gets a curated subset copied into its `.claude/` directory by `install.sh`.
+A thin personal layer for Claude Code that sits **on top of** the commodity engineering frameworks — superpowers, GSD, context-mode, claude-mem. Those frameworks own engineering execution: planning, TDD, subagent orchestration, context sandboxing, cross-session memory. Loadout never rebuilds them. It owns the parts that are irreducibly *yours*:
+
+- **Think how you think** — an operator profile (voice, conditional concision, reasoning defaults: first-principles → systems-thinking) and a `profile-me` skill that keeps sharpening it from your real sessions.
+- **Token-light** — a small skill set, progressive disclosure (~50 tokens per skill until matched), and governance that deletes before it adds.
+- **Brainstorm → outcome** — the arc from idea to shipped/monetized result: outcome-framing → product-launch → monetize-or-opensource.
 
 > What's your Claude loadout? Pick a preset, run the wizard, or compose your own.
 
-Unlike engineering-only config frameworks, Loadout personalizes Claude to how *you* think and work — spanning technical, business, and cognitive skills — and stays token-light by loading each skill body only when it's matched. The goal is to turn brainstorming into shipped outcomes, not to accumulate tooling.
+## The stack
+
+```
+LAYER 2 — LOADOUT (the only thing you maintain)
+  voice + reasoning defaults     CLAUDE.md operator profile, thinking/ skills
+  governance policies            governing-algorithm, orchestration-policy,
+                                 grounding-standard, handoff-log, reasoning-education
+  outcome arc                    outcome-framing → product-launch → monetize-or-opensource
+  compounding engine             profile-me + recursive-refinement + token-discipline
+
+LAYER 1 — COMMODITY ENGINEERING RHYTHM (adopt, never rebuild)
+  superpowers    spec-first, TDD, subagent-driven development
+  GSD            context engineering, subagent orchestration, quality gates
+  context-mode   tool-output sandboxing (anti context-rot)
+  claude-mem     cross-session memory, auto folder-CLAUDE.md
+  skill-creator, frontend-design  (Anthropic official)
+
+LAYER 0 — Claude Code + the Agent Skills spec
+```
+
+The rule that keeps it coherent: when Loadout and Layer 1 could overlap, Loadout yields. The generated `CLAUDE.md` carries a **Layer Contract** that tells Claude to defer engineering execution to Layer 1 and reserves Loadout for voice, token budget, reasoning policies, and the path to outcome.
 
 ## The shape in one diagram
 
@@ -14,43 +38,44 @@ loadout/
 ├── LICENSE                          ← Apache-2.0 (code)
 ├── LICENSE-CONTENT                  ← CC-BY-4.0 (skill .md files)
 ├── TRADEMARK.md                     ← name + branding policy
-├── install.sh                       ← bash; copies what each project needs
+├── install.sh                       ← layered install (Layer 1 + Layer 2); --standalone for copy-only
 ├── wizard.sh                        ← interactive personalization
 ├── core/                            ← always copied to every project
-│   ├── CLAUDE.md.template           ← ~400 tokens, placeholders filled by wizard
+│   ├── CLAUDE.md.template           ← operator profile + Layer Contract, placeholders filled by wizard
 │   ├── pitfalls.md                  ← reference; not auto-loaded
 │   └── skills/
 │       ├── thinking/                ← cognitive foundations
 │       │   ├── first-principles.md
 │       │   └── systems-thinking.md
-│       └── operating/               ← how to work with Claude
+│       └── operating/               ← thin policies; execution delegated to Layer 1
 │           ├── governing-algorithm.md   ← question → delete → simplify → accelerate → automate
-│           ├── orchestration-policy.md  ← parallel vs. sequential; execution delegated to GSD
+│           ├── orchestration-policy.md  ← parallel vs. sequential; execution via GSD
 │           ├── grounding-standard.md    ← ground claims before asserting
 │           ├── handoff-log.md           ← cold-session resume schema, rides on claude-mem
 │           ├── reasoning-education.md   ← state the governing principle on non-obvious decisions
 │           ├── token-discipline.md
-│           ├── walkthrough-then-codify.md
+│           ├── walkthrough-then-codify.md  ← Elon step 5: automate last
 │           ├── recursive-refinement.md
-│           └── profile-me.md        ← in-Claude personalization skill
-├── domains/                         ← technical, cherry-pick per project
-│   ├── scientific-python.md
-│   ├── academic-writing.md
-│   ├── data-analysis.md
-│   ├── frontend.md
-│   ├── backend-saas.md
-│   ├── infra-containers.md
-│   ├── privacy-opsec.md
-│   ├── engineering-simulation.md    ← power systems, microgrids, physical sims
-│   └── report-generation.md         ← PDFs via Quarto / Typst / HTML+print
-├── business/                        ← money-making, cherry-pick per project
+│           └── profile-me.md        ← the compounding engine
+├── domains/                         ← thin adapters where best-in-class externals exist;
+│   │                                  native only where none does
+│   ├── scientific-python.md         ← adapter → scientific-agent-skills + operator standards
+│   ├── academic-writing.md          ← adapter → academic-research-skills + humanizer
+│   ├── data-analysis.md             ← adapter → scientific-agent-skills
+│   ├── frontend.md                  ← adapter → frontend-design plugin
+│   ├── backend-saas.md              ← adapter → superpowers/GSD + mattpocock/vercel skills
+│   ├── infra-containers.md          ← native (rootless Podman, SELinux, devcontainers)
+│   ├── privacy-opsec.md             ← native
+│   ├── engineering-simulation.md    ← native (power systems, microgrids, physical sims)
+│   └── report-generation.md         ← native (PDFs via Quarto / Typst / HTML+print)
+├── business/                        ← operator judgment, cherry-pick per project
 │   ├── outcome-framing.md
 │   ├── client-services.md
 │   ├── digital-products.md
 │   ├── automation-workflows.md
-│   ├── content-creation.md
+│   ├── content-creation.md          ← overlay → marketingskills
 │   ├── ai-consulting.md
-│   ├── seo-and-marketing.md
+│   ├── seo-and-marketing.md         ← overlay → marketingskills
 │   ├── outreach-applications.md
 │   └── product-launch.md            ← pre-launch / launch-day / retro
 ├── meta/                            ← cross-cutting workflows
@@ -65,9 +90,9 @@ loadout/
 
 ## How to install into a project
 
-### Option 1: Wizard (default, recommended)
+By default every mode is **layered**: it provisions the Layer 1 plugins via the `claude` CLI (globally — once per machine), then copies the Loadout personal layer into the project. Add `--standalone` to any mode to skip Layer 1 entirely — the install is then pure bash with zero external dependencies.
 
-Run with no flags — drops into the personalization wizard:
+### Option 1: Wizard (default, recommended)
 
 ```bash
 ./install.sh ~/projects/myproject
@@ -75,23 +100,14 @@ Run with no flags — drops into the personalization wizard:
 ./install.sh ~/projects/myproject --wizard
 ```
 
-The wizard asks 5–8 questions (name, role, domains, ship goal, voice, tooling, optional reference markdown files), then writes a fully personalized `CLAUDE.md` plus a curated skill set. Re-running is safe — existing files are backed up.
+The wizard asks ~8 questions (name, role, domains, voice, tooling, reference markdown, extra notes — closing with the *outcome you're driving toward*, which selects the business/meta skills), then writes a fully personalized `CLAUDE.md` (profile + Layer Contract) plus a curated skill set, and offers the layered/standalone choice. Re-running is safe — existing files are backed up.
 
 ### Option 2: Preset
 
-Seven presets cover the common project shapes:
-
 ```bash
-./install.sh ~/projects/myproject --preset academic-research
 ./install.sh ~/projects/myproject --preset saas-launch
-./install.sh ~/projects/myproject --preset freelance-services
-./install.sh ~/projects/myproject --preset content-creator
-./install.sh ~/projects/myproject --preset job-pipeline
-./install.sh ~/projects/myproject --preset consultant
-./install.sh ~/projects/myproject --preset engineering
+./install.sh ~/projects/myproject --preset academic-research --standalone
 ```
-
-Composition of each preset:
 
 | Preset | Domains | Business | Meta |
 | --- | --- | --- | --- |
@@ -103,13 +119,9 @@ Composition of each preset:
 | `consultant` | report-generation | ai-consulting, outcome-framing, client-services | — |
 | `engineering` | engineering-simulation, scientific-python, data-analysis, report-generation, infra-containers | — | — |
 
-Core (CLAUDE.md.template, pitfalls.md, thinking, operating) is always copied — every preset includes it.
-
-In preset mode, `CLAUDE.md` ships with placeholders unfilled — either edit by hand or re-run with `--wizard`.
+Core (CLAUDE.md.template, pitfalls.md, thinking, operating) is always copied — every preset includes it. In preset mode, `CLAUDE.md` ships with placeholders unfilled — either edit by hand or re-run with `--wizard`.
 
 ### Option 3: Custom
-
-Any combination of files:
 
 ```bash
 ./install.sh ~/projects/myproject --custom \
@@ -118,37 +130,39 @@ Any combination of files:
   --meta monetize-or-opensource
 ```
 
-Comma-separated, no spaces. Domains, business, meta are all optional individually.
+Comma-separated. Domains, business, meta are all optional individually.
 
-### Option 4: Plugins too
+### Standalone mode
 
-Add `--plugins` to any mode to also install the recommended Claude Code plugins (skill-creator, frontend-design, superpowers, claude-mem, context-mode, GSD):
-
-```bash
-./install.sh ~/projects/myproject --preset saas-launch --plugins
-```
-
-This requires the `claude` CLI to be installed and in PATH. Plugins install globally — once per machine, not per project.
+`--standalone` skips Layer 1 provisioning: no `claude` CLI needed, no plugins, no network — just bash copying markdown. The Layer Contract still lands in `CLAUDE.md`; install Layer 1 later and it simply starts being honored.
 
 ### Optional: devcontainer
 
-The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed Linux environment (requires Docker + a devcontainer-aware tool such as VS Code Dev Containers or the `devcontainer` CLI). It runs the same on macOS, Windows/WSL2, and Linux hosts. It is **not** required to install or use Loadout — `install.sh` and `wizard.sh` are pure bash and run anywhere, with or without the container.
+The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed Linux environment (requires Docker + a devcontainer-aware tool). It is **not** required — `install.sh` and `wizard.sh` are pure bash and run anywhere.
 
 ## What gets installed
 
-The script copies into `<project>/CLAUDE.md` and `<project>/.claude/skills/`:
-
-- `CLAUDE.md` — operator profile (placeholders filled by wizard, or left for manual edit in preset/custom mode)
+- `CLAUDE.md` — operator profile + Layer Contract (placeholders filled by wizard, or left for manual edit)
 - `.claude/pitfalls.md` — reference for designing/auditing skills
 - `.claude/skills/thinking/*.md` — first-principles, systems-thinking
-- `.claude/skills/operating/*.md` — token discipline, walkthrough-then-codify, recursive refinement, profile-me, plus the five governance policies
-- `.claude/skills/<domain>.md` — selected domain files
-- `.claude/skills/<business>.md` — selected business files
-- `.claude/skills/<meta>.md` plus `sub/*.md` — selected meta files (sub-skills load automatically when parent meta-skill is included)
+- `.claude/skills/operating/*.md` — the five governance policies, token-discipline, walkthrough-then-codify, recursive-refinement, profile-me
+- `.claude/skills/<domain>.md`, `<business>.md`, `<meta>.md` (+ `sub/*.md`) — the selected adapters and overlays
 
-## In-Claude personalization
+## The compounding loop
 
-After the wizard runs, invoke the `profile-me` skill inside Claude Code at any time to deepen your profile — it interviews you, optionally reads reference markdown you point it at, and writes new personalized skill files directly into your `.claude/skills/`.
+Additive toolkits don't compound; this is built to:
+
+```
+your sessions ─► profile-me mines corrections, decisions, voice, skill misses
+            ─► refreshes your skills + CLAUDE.md to fit you better
+            ─► next project starts more "you" ─► better, faster outcomes
+            ─► more signal to capture ─┐
+            ▲                          │
+            └──────────────────────────┘
+  recursive-refinement prunes · token-discipline caps the size · governing-algorithm deletes
+```
+
+The engineering substrate (Layer 1) improves by its communities, for free. The personal layer improves by your own usage. You maintain a shrinking, sharpening core and inherit a growing engineering core you didn't write.
 
 ## Format
 
@@ -163,44 +177,20 @@ description: One sentence on when to invoke. ~50 tokens always-on.
 # Body — loads only when the agent decides this skill applies.
 ```
 
-This follows Claude Code's progressive-disclosure convention: the description costs ~50 tokens always-on; the body costs nothing until matched. Each body is also valid as a standalone snippet — strip the frontmatter and paste into a Project's custom instructions, a chat, or a CLAUDE.md.
-
-## How the agent loads it
-
-```
-Session start
-  ↓
-Read CLAUDE.md (~400 tokens)
-  ↓
-Scan .claude/skills/**/*.md frontmatter (~50 tok per file)
-  ↓
-[Agent waits for user message]
-  ↓
-User: "Help me draft a cover letter for X"
-  ↓
-Frontmatter matches outreach-applications + operator-profile in CLAUDE.md
-  ↓
-Load outreach-applications.md body (full content)
-  ↓
-Draft using voice from CLAUDE.md + structure from skill
-```
-
-Everything else stays out of context until needed.
+The description costs ~50 tokens always-on; the body costs nothing until matched. Each body is also valid as a standalone snippet — strip the frontmatter and paste into a Project's custom instructions or a CLAUDE.md.
 
 ## Maintenance
 
-The library is a living thing. Per `core/skills/operating/recursive-refinement.md`:
-
-1. When a skill misfires, fix the immediate run, then update the skill body so the failure can't recur.
-2. When a skill misfires repeatedly across iterations, retire it and re-author from scratch (`core/skills/operating/walkthrough-then-codify.md`).
-3. When you build a new workflow you'll repeat, walk it manually first, then codify via `core/skills/operating/walkthrough-then-codify.md` (the Anthropic skill-creator plugin does the packaging).
-4. When the ecosystem ships better tools, scan `ecosystem/external-skills.md` for additions; install via `ecosystem/plugins-to-install.md`.
+1. When a skill misfires, fix the immediate run, then update the skill body (`recursive-refinement`).
+2. When a skill misfires repeatedly, retire it and re-author from `walkthrough-then-codify`.
+3. New repeatable workflow → walk it manually first, then codify (`walkthrough-then-codify`; the Anthropic skill-creator plugin does the packaging).
+4. When the ecosystem ships better tools, scan `ecosystem/external-skills.md`; if an external now beats a native domain skill, shrink the domain skill to an adapter.
 
 Don't download skills from strangers without reading them first — they're instruction files; treat them like running someone's binary.
 
 ## Licensing
 
-- **Code** (`install.sh`, `wizard.sh`, future CLI): **Apache-2.0**. Patent grant explicit.
+- **Code** (`install.sh`, `wizard.sh`): **Apache-2.0**. Patent grant explicit.
 - **Skill content** (all `.md` files in `core/`, `domains/`, `business/`, `meta/`): **CC-BY-4.0**. Attribution required.
 
 See `LICENSE`, `LICENSE-CONTENT`, and `TRADEMARK.md` for the full text.

@@ -1,6 +1,6 @@
 # Plugins to Install
 
-Curated set of Claude Code plugins worth installing. Source: Nate Herk's "I tried 100+ Claude Code skills, these 6 are the best" plus broader community consensus from ScriptByAI's 2026 list. The `install.sh --plugins` flag installs the recommended subset automatically.
+Curated set of Claude Code plugins worth installing — this is Loadout's Layer 1. Source: Nate Herk's "I tried 100+ Claude Code skills, these 6 are the best" plus broader community consensus from ScriptByAI's 2026 list. The default (layered) `install.sh` run provisions this set automatically; `--standalone` skips it.
 
 > Plugins differ from skills: a skill is a markdown file teaching Claude how to do a job better. A plugin is a larger package that may include multiple skills, hooks, MCP servers, and behavioural changes.
 

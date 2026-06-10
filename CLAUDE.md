@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-**Loadout** is a modular library of Claude operating instructions. It is the master source; projects get a curated subset installed into their `.claude/` directory via `install.sh`. Nothing here runs as code — all content is Markdown skill files consumed by Claude sessions.
+**Loadout** is a thin personal layer of Claude operating instructions that sits on top of the commodity engineering frameworks (superpowers, GSD, context-mode, claude-mem — "Layer 1"). It never rebuilds what Layer 1 does well; it owns voice, token discipline, reasoning policies, and the brainstorm→outcome arc. This repo is the master source; projects get Layer 1 provisioned plus a curated Layer 2 subset installed into their `.claude/` directory via `install.sh`. Nothing here runs as code — all content is Markdown skill files consumed by Claude sessions.
 
 ## Installing into a project
 
@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ./install.sh ~/projects/myproject
 
 # Preset
-./install.sh ~/projects/myproject --preset saas-launch [--plugins]
+./install.sh ~/projects/myproject --preset saas-launch [--standalone]
 
 # Custom
 ./install.sh ~/projects/myproject --custom \
@@ -24,7 +24,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Available presets: `academic-research`, `saas-launch`, `freelance-services`, `content-creator`, `job-pipeline`, `consultant`, `engineering`.
 
-Core (CLAUDE.md.template, pitfalls.md, thinking/, operating/) is always copied regardless of preset. `--plugins` requires the `claude` CLI in PATH.
+The default install is layered: Layer 1 plugins are provisioned via the `claude` CLI first, then Layer 2 is copied. `--standalone` skips Layer 1 — pure bash, zero external dependencies. Core (CLAUDE.md.template, pitfalls.md, thinking/, operating/) is always copied regardless of preset.
 
 ## Skill file format
 
@@ -53,15 +53,16 @@ core/                  → always installed; identity template, voice, tooling r
                          recursive-refinement, profile-me,
                          governing-algorithm, orchestration-policy,
                          grounding-standard, handoff-log, reasoning-education
-domains/               → technical cherry-picks (scientific-python, frontend, backend-saas,
-                         engineering-simulation, report-generation, …)
+domains/               → thin adapters where a best-in-class external exists
+                         (scientific-python, frontend, backend-saas, …); native depth
+                         only where none does (engineering-simulation, report-generation, …)
 business/              → commercial workflows (outcome-framing, client-services,
                          product-launch, …)
 meta/                  → cross-cutting (monetize-or-opensource + sub/open-sourcing,
                          sub/monetization)
 ecosystem/             → human-facing references, not skills (plugins-to-install,
                          external-skills)
-install.sh             → bash; copies what each project needs
+install.sh             → bash; provisions Layer 1, copies Layer 2 (--standalone = copy-only)
 wizard.sh              → interactive personalization, invoked via install.sh --wizard
 LICENSE                → Apache-2.0 (code)
 LICENSE-CONTENT        → CC-BY-4.0 (skill .md files)
