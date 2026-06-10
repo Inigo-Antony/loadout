@@ -50,7 +50,9 @@ core/                  → always installed; identity template, voice, tooling r
   skills/
     thinking/          → first-principles.md, systems-thinking.md
     operating/         → token-discipline, walkthrough-then-codify,
-                         recursive-refinement, profile-me
+                         recursive-refinement, profile-me,
+                         governing-algorithm, orchestration-policy,
+                         grounding-standard, handoff-log, reasoning-education
 domains/               → technical cherry-picks (scientific-python, frontend, backend-saas,
                          engineering-simulation, report-generation, …)
 business/              → commercial workflows (outcome-framing, client-services,

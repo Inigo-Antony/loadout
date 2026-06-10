@@ -24,6 +24,11 @@ loadout/
 │       │   ├── first-principles.md
 │       │   └── systems-thinking.md
 │       └── operating/               ← how to work with Claude
+│           ├── governing-algorithm.md   ← question → delete → simplify → accelerate → automate
+│           ├── orchestration-policy.md  ← parallel vs. sequential; execution delegated to GSD
+│           ├── grounding-standard.md    ← ground claims before asserting
+│           ├── handoff-log.md           ← cold-session resume schema, rides on claude-mem
+│           ├── reasoning-education.md   ← state the governing principle on non-obvious decisions
 │           ├── token-discipline.md
 │           ├── walkthrough-then-codify.md
 │           ├── recursive-refinement.md
