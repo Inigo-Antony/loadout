@@ -18,7 +18,7 @@ Invoke at the end of a substantial session, or pointed at one ("learn from this 
 Scan the conversation (and, if installed, claude-mem's record of it) for five signal types:
 
 1. **Corrections** — every time the user redirected output ("shorter", "no bullets", "use Podman not Docker", "stop asking, just do it"). Corrections are the highest-grade profile signal; they are revealed preference, not stated preference.
-2. **Decisions + rationale** — non-obvious choices and the principle stated for them (see `reasoning-education`). These become standing rules or skill content.
+2. **Decisions + rationale** — non-obvious choices and the principle stated for them (see `reasoning-education`). These become profile rules or skill content.
 3. **Voice in the wild** — how the user actually writes when they're not answering interview questions. Sentence length, bluntness, vocabulary that recurs.
 4. **Skill hits and misses** — which skills fired and helped, which fired and were ignored or corrected, which workflow had *no* skill and clearly wanted one (the same multi-step dance performed twice = a candidate).
 5. **Friction** — steps the user did manually and grudgingly. The "most annoying step" is the highest-value thing to codify.

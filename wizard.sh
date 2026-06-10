@@ -12,8 +12,6 @@
 #   ./install.sh ~/projects/myproject --wizard
 # which dispatches here when --wizard is passed.
 #
-# Design notes: see .brainstorm/personalization-notes.md
-#
 # This script is intentionally written in pure bash + standard POSIX tools
 # (grep, awk, sed) so it runs on every machine install.sh already runs on.
 # No python, no jq, no network calls. Reference-markdown "parsing" is
@@ -358,132 +356,74 @@ case "$PRIMARY_OS" in
     *Windows*)      OS_LINE="Windows (native, PowerShell)" ;;
 esac
 
-# Compose CLAUDE.md.
-#
-# If a placeholder template exists at $LIB/core/CLAUDE.md.template (produced by
-# the generalization agent), use it via sed substitution — keeps a single
-# source of truth for the structure. Otherwise fall back to the inline heredoc
-# below.
+# Compose CLAUDE.md from the template — the single source of truth for the
+# profile structure (including the Layer Contract). No inline fallback: a
+# checkout without the template is broken and should fail loudly.
 TEMPLATE="$LIB/core/CLAUDE.md.template"
-if [[ -f "$TEMPLATE" ]]; then
-    # Tooling notes: collapse the OS/lang answers into a single line, plus
-    # any extras the user typed in Q8 (kept as-is below in its own section).
-    TOOLING_NOTES_INLINE="Default language $DEFAULT_LANG on $OS_LINE."
-    DOMAIN_DISPLAY="$(echo "$DOMAINS" | tr ',' ' ' | sed 's/[[:space:]]\+/, /g')"
+[[ -f "$TEMPLATE" ]] || die "core/CLAUDE.md.template not found at $LIB/core/ — incomplete checkout?"
 
-    # mustache-style {{#FIELD}}…{{/FIELD}} blocks: keep the inner content only
-    # if the corresponding variable is non-empty.
-    keep_or_strip() {
-        # $1 = field name, $2 = current value, $3 = file
-        if [[ -n "$2" ]]; then
-            sed -E -i.tmp "s|\\{\\{#${1}\\}\\}(.*)\\{\\{/${1}\\}\\}|\\1|g" "$3"
-        else
-            sed -E -i.tmp "s|\\{\\{#${1}\\}\\}.*\\{\\{/${1}\\}\\}||g" "$3"
-        fi
-        rm -f "${3}.tmp"
-    }
+# Tooling notes: collapse the OS/lang answers into a single line, plus
+# any extras the user typed in Q7 (kept as-is below in its own section).
+TOOLING_NOTES_INLINE="Default language $DEFAULT_LANG on $OS_LINE."
+DOMAIN_DISPLAY="$(echo "$DOMAINS" | tr ',' ' ' | sed 's/[[:space:]]\+/, /g')"
 
-    cp "$TEMPLATE" "$TARGET/CLAUDE.md"
-    # Optional blocks first (must run before plain substitution).
-    keep_or_strip "DOMAIN" "$DOMAIN_DISPLAY" "$TARGET/CLAUDE.md"
-    keep_or_strip "GOALS"  "$SHIP_GOAL"      "$TARGET/CLAUDE.md"
-
-    # Escape sed-replacement special chars (|, \, &) in user input so values
-    # like "Alice|Bob" or "C:\Users\..." don't break the substitution or
-    # introduce accidental backreferences. Newlines are also stripped — they
-    # would terminate the sed expression.
-    sed_escape() {
-        printf '%s' "$1" | tr -d '\n' | sed -e 's/[\\&|]/\\&/g'
-    }
-
-    NAME_S="$(sed_escape "$NAME")"
-    ROLE_S="$(sed_escape "$ROLE")"
-    DOMAIN_DISPLAY_S="$(sed_escape "$DOMAIN_DISPLAY")"
-    SHIP_GOAL_S="$(sed_escape "$SHIP_GOAL")"
-    VOICE_LINE_S="$(sed_escape "$VOICE_STYLE_LINE $VOICE_REGISTER_LINE")"
-    OS_LINE_S="$(sed_escape "$OS_LINE")"
-    DEFAULT_LANG_S="$(sed_escape "$DEFAULT_LANG")"
-    TOOLING_NOTES_S="$(sed_escape "$TOOLING_NOTES_INLINE")"
-
-    # Plain placeholders.
-    sed -i.tmp \
-        -e "s|{{NAME}}|$NAME_S|g" \
-        -e "s|{{ROLE}}|$ROLE_S|g" \
-        -e "s|{{DOMAIN}}|$DOMAIN_DISPLAY_S|g" \
-        -e "s|{{BACKGROUND}}||g" \
-        -e "s|{{GOALS}}|$SHIP_GOAL_S|g" \
-        -e "s|{{VOICE_STYLE}}|$VOICE_LINE_S|g" \
-        -e "s|{{PRIMARY_OS}}|$OS_LINE_S|g" \
-        -e "s|{{DEFAULT_LANGUAGE}}|$DEFAULT_LANG_S|g" \
-        -e "s|{{TOOLING_NOTES}}|$TOOLING_NOTES_S|g" \
-        "$TARGET/CLAUDE.md"
-    rm -f "$TARGET/CLAUDE.md.tmp"
-
-    # Append extras + done; skip the inline heredoc below.
-    if [[ -n "$EXTRA_NOTES" ]]; then
-        {
-            echo ""
-            echo "## Operator-specific notes"
-            echo ""
-            printf '%s' "$EXTRA_NOTES"
-        } >> "$TARGET/CLAUDE.md"
+# mustache-style {{#FIELD}}…{{/FIELD}} blocks: keep the inner content only
+# if the corresponding variable is non-empty.
+keep_or_strip() {
+    # $1 = field name, $2 = current value, $3 = file
+    if [[ -n "$2" ]]; then
+        sed -E -i.tmp "s|\\{\\{#${1}\\}\\}(.*)\\{\\{/${1}\\}\\}|\\1|g" "$3"
+    else
+        sed -E -i.tmp "s|\\{\\{#${1}\\}\\}.*\\{\\{/${1}\\}\\}||g" "$3"
     fi
-    info "wrote $TARGET/CLAUDE.md (from template)"
-    USED_TEMPLATE="true"
-else
-    USED_TEMPLATE="false"
-fi
+    rm -f "${3}.tmp"
+}
 
-if [[ "${USED_TEMPLATE:-false}" != "true" ]]; then
-# Inline fallback — used only when the placeholder template isn't present.
-cat > "$TARGET/CLAUDE.md" <<EOF
-# Operator Context
+cp "$TEMPLATE" "$TARGET/CLAUDE.md"
+# Optional blocks first (must run before plain substitution).
+keep_or_strip "DOMAIN" "$DOMAIN_DISPLAY" "$TARGET/CLAUDE.md"
+keep_or_strip "GOALS"  "$SHIP_GOAL"      "$TARGET/CLAUDE.md"
 
-## Who I am
+# Escape sed-replacement special chars (|, \, &) in user input so values
+# like "Alice|Bob" or "C:\Users\..." don't break the substitution or
+# introduce accidental backreferences. Newlines are also stripped — they
+# would terminate the sed expression.
+sed_escape() {
+    printf '%s' "$1" | tr -d '\n' | sed -e 's/[\\&|]/\\&/g'
+}
 
-$NAME. $ROLE. Working primarily on: $SHIP_GOAL
+NAME_S="$(sed_escape "$NAME")"
+ROLE_S="$(sed_escape "$ROLE")"
+DOMAIN_DISPLAY_S="$(sed_escape "$DOMAIN_DISPLAY")"
+SHIP_GOAL_S="$(sed_escape "$SHIP_GOAL")"
+VOICE_LINE_S="$(sed_escape "$VOICE_STYLE_LINE $VOICE_REGISTER_LINE")"
+OS_LINE_S="$(sed_escape "$OS_LINE")"
+DEFAULT_LANG_S="$(sed_escape "$DEFAULT_LANG")"
+TOOLING_NOTES_S="$(sed_escape "$TOOLING_NOTES_INLINE")"
 
-## Voice
+# Plain placeholders.
+sed -i.tmp \
+    -e "s|{{NAME}}|$NAME_S|g" \
+    -e "s|{{ROLE}}|$ROLE_S|g" \
+    -e "s|{{DOMAIN}}|$DOMAIN_DISPLAY_S|g" \
+    -e "s|{{BACKGROUND}}||g" \
+    -e "s|{{GOALS}}|$SHIP_GOAL_S|g" \
+    -e "s|{{VOICE_STYLE}}|$VOICE_LINE_S|g" \
+    -e "s|{{PRIMARY_OS}}|$OS_LINE_S|g" \
+    -e "s|{{DEFAULT_LANGUAGE}}|$DEFAULT_LANG_S|g" \
+    -e "s|{{TOOLING_NOTES}}|$TOOLING_NOTES_S|g" \
+    "$TARGET/CLAUDE.md"
+rm -f "$TARGET/CLAUDE.md.tmp"
 
-$VOICE_STYLE_LINE $VOICE_REGISTER_LINE Acknowledge gaps honestly rather than dodge them.
-
-## Tooling
-
-- Primary OS: $OS_LINE
-- Default language: $DEFAULT_LANG for code-heavy work
-- All assets in markdown, version-controlled
-
-## Standing rules
-
-- **Plan before executing** on any non-trivial task. Ask until ~95% confident before acting.
-- **Minimal targeted edits** when modifying existing files. Generate complete new files only on explicit ask.
-- **Skills > CLAUDE.md** for everything that doesn't need to fire every turn (progressive disclosure).
-- **Watch context.** /context regularly. /compact at 60%, not 90%. /clear between unrelated tasks.
-EOF
-
-# Append extra notes if provided
 if [[ -n "$EXTRA_NOTES" ]]; then
     {
         echo ""
         echo "## Operator-specific notes"
         echo ""
-        # Indent / format gently — keep user's lines as-is
         printf '%s' "$EXTRA_NOTES"
     } >> "$TARGET/CLAUDE.md"
 fi
-
-# Skill index pointer
-cat >> "$TARGET/CLAUDE.md" <<'EOF'
-
-## Skill index
-
-Skills live in `.claude/skills/` and auto-discover by frontmatter. See
-`.claude/pitfalls.md` for anti-patterns. Invoke `profile-me` to deepen this
-profile or generate domain-specific skills from a conversation.
-EOF
-
-info "wrote $TARGET/CLAUDE.md (inline)"
-fi   # end inline-fallback branch
+info "wrote $TARGET/CLAUDE.md (from template)"
 
 # =========================================================
 # WRITE SKILLS (delegate to install.sh's copy logic)
@@ -499,23 +439,15 @@ echo ""
 hr
 say "Installing skills: domains=[$DOMAINS]  business=[$BUSINESS]  meta=[$META]"
 
-# Skip overwriting CLAUDE.md by passing --no-claude-overwrite — install.sh
-# would need this flag added.  Until then, we restore our wizard-written
-# CLAUDE.md after install.sh has run.
-TMP_CLAUDE="$(mktemp)"
-cp "$TARGET/CLAUDE.md" "$TMP_CLAUDE"
-
-ARGS=("$TARGET" --custom)
+# --no-claude-overwrite keeps install.sh from clobbering the personalized
+# CLAUDE.md this wizard just wrote.
+ARGS=("$TARGET" --custom --no-claude-overwrite)
 [[ -n "$DOMAINS" ]]  && ARGS+=(--domains "$DOMAINS")
 [[ -n "$BUSINESS" ]] && ARGS+=(--business "$BUSINESS")
 [[ -n "$META" ]]     && ARGS+=(--meta "$META")
 [[ "${STANDALONE:-false}" == "true" ]] && ARGS+=(--standalone)
 
-# Layer 1 provisioning (when chosen) prints progress; Layer 2 copy is quiet.
 bash "$INSTALL_SH" "${ARGS[@]}"
-
-# Restore the personalized CLAUDE.md
-mv "$TMP_CLAUDE" "$TARGET/CLAUDE.md"
 
 # =========================================================
 # DONE

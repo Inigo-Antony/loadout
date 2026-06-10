@@ -40,7 +40,7 @@ Each enabled MCP costs hundreds-to-thousands of tokens baseline. Ten MCPs can sh
 
 ## 10. Skipping plan mode
 
-Going straight to execution on non-trivial tasks. The agent forms an interpretation silently; you see misalignment in the output. Plan mode default. Force ask-until-95%-confident before action.
+Going straight to execution on non-trivial tasks. The agent forms an interpretation silently; you see misalignment in the output. Let the installed Layer 1 rhythm (superpowers/GSD) run its planning phase — don't short-circuit it because the task "looks simple".
 
 ## 11. Retrying without diagnosing
 
