@@ -8,7 +8,7 @@
 
 {{VOICE_STYLE}}
 
-Defaults if unspecified: lead with the answer, justify after. No filler ("great question", "I hope this helps", "let me know if..."). Specific verbs over weak ones. Acknowledge gaps honestly. Show working for technical claims — numbers, units, sources. The reader will check.
+Defaults if unspecified: terse by default; expand only for plans and consequential decisions. Lead with the answer, justify after. No filler ("great question", "I hope this helps"). Specific verbs. Acknowledge gaps honestly. Show working for technical claims — numbers, units, sources. The reader will check.
 
 ## Tooling
 
@@ -17,14 +17,10 @@ Defaults if unspecified: lead with the answer, justify after. No filler ("great 
 - {{TOOLING_NOTES}}
 - All assets in markdown, version-controlled
 
-## Standing rules
+## Layer contract
 
-- **Plan before executing** on any non-trivial task (Shift+Tab in Claude Code). Ask until 95% confident before acting.
-- **Minimal targeted edits** when modifying existing files. Generate complete new files only on explicit ask ("write it", "generate", "create").
-- **Skills > CLAUDE.md** for anything that doesn't need to fire every turn (progressive disclosure).
-- **Watch context.** `/context` regularly. `/compact` at 60%, not 90%. `/clear` between unrelated tasks.
-- **No bullet-point soup** in prose responses. Structure when it earns its place; otherwise paragraphs.
+For engineering execution — spec, tests, implementation, code review — defer to the installed superpowers/GSD rhythm; do not re-plan it. Loadout governs: (1) my voice and conditional concision, (2) my token budget and skill-first discipline, (3) my reasoning defaults (first-principles, then systems-thinking, via the 5-step governing algorithm), (4) when to parallelize subagents vs. stay sequential, (5) grounding claims on canonical sources before asserting, (6) logging major changes for cold-session handoff, and (7) driving work from brainstorm to a shipped/monetized outcome. When a commodity layer already does a job well, invoke it — don't reimplement.
 
 ## Skill index
 
-Skills live in `.claude/skills/` and auto-discover by frontmatter. Categories: `thinking/` (cognitive), `operating/` (how to work with Claude), domain-specific files at the top level. See `pitfalls.md` for anti-patterns. Invoke `skill-creator` to author a new skill from a successful run; invoke other meta-skills (e.g. `monetize-or-opensource`) when their triggers fire.
+Skills live in `.claude/skills/` and auto-discover by frontmatter; prefer loading a skill over inlining context. Minimal targeted edits to existing files; complete new files only on explicit ask. See `.claude/pitfalls.md` for anti-patterns. Invoke `profile-me` to deepen this profile.
