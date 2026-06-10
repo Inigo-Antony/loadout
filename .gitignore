@@ -13,6 +13,9 @@ pro/
 # Local-only test installs
 test-install/
 
+# Trial-run reference file — not part of the project
+MBSE_Datasheet_Arcadia.pdf
+
 # Claude Code session helper + local-only settings
 resume-session
 .claude/settings.local.json

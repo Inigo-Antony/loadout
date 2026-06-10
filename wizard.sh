@@ -41,6 +41,17 @@ die()  { echo "ERROR: $*" >&2; exit 1; }
 info() { echo "  $*"; }
 hr()   { echo "------------------------------------------------------------"; }
 say()  { echo ""; echo "$*"; }
+# trim leading/trailing whitespace (comma-separated lists may be entered as "a, b, c")
+trim() { local s="$1"; s="${s#"${s%%[![:space:]]*}"}"; printf '%s' "${s%"${s##*[![:space:]]}"}"; }
+# list available domain skills (basenames), discovered from the repo so the
+# prompt and validation stay in sync with the actual files.
+list_domains() {
+    local f
+    for f in "$LIB"/domains/*.md; do
+        [[ -e "$f" ]] || continue
+        basename "$f" .md
+    done
+}
 
 # ask <prompt> <default> <varname>
 # Reads one line. If empty, uses default. Stores into the named variable.
@@ -194,9 +205,24 @@ ask "role" "" ROLE
 
 hr
 say "Q3. What domain(s) do you work in?"
-echo "    Comma-separated.  Examples: backend-saas, frontend, infra-containers,"
-echo "    scientific-python, academic-writing, data-analysis, privacy-opsec."
-ask "domains" "backend-saas,frontend" DOMAIN_INPUT
+AVAILABLE_DOMAINS="$(list_domains | tr '\n' ' ')"
+echo "    Comma-separated. Pick from these domain skills (not preset names):"
+echo "      $AVAILABLE_DOMAINS"
+# Validate against the actual files; re-prompt until every token is a real
+# domain skill. Catches preset names (e.g. academic-research) and typos.
+while true; do
+    ask "domains" "backend-saas,frontend" DOMAIN_INPUT
+    invalid=""
+    IFS=',' read -ra _DOM_CHECK <<< "$DOMAIN_INPUT"
+    for d in "${_DOM_CHECK[@]}"; do
+        d="$(trim "$d")"
+        [[ -z "$d" ]] && continue
+        [[ -f "$LIB/domains/${d}.md" ]] || invalid+=" $d"
+    done
+    [[ -z "$invalid" ]] && break
+    echo "  not a known domain skill:$invalid"
+    echo "  choose from: $AVAILABLE_DOMAINS"
+done
 
 hr
 say "Q4. What are you trying to ship in the next 1-3 months?"

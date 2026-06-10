@@ -39,6 +39,8 @@ LIB="$SCRIPT_DIR"
 # ---- Helpers ----
 die() { echo "ERROR: $*" >&2; exit 1; }
 info() { echo "  $*"; }
+# trim leading/trailing whitespace (comma-separated lists may be entered as "a, b, c")
+trim() { local s="$1"; s="${s#"${s%%[![:space:]]*}"}"; printf '%s' "${s%"${s##*[![:space:]]}"}"; }
 
 usage() {
     cat <<'EOF'
@@ -166,6 +168,7 @@ if [[ -n "$DOMAINS" ]]; then
     echo "==> Copying domain skills: $DOMAINS"
     IFS=',' read -ra DOM_ARR <<< "$DOMAINS"
     for d in "${DOM_ARR[@]}"; do
+        d="$(trim "$d")"
         src="$LIB/domains/${d}.md"
         [[ ! -f "$src" ]] && die "domain skill not found: $d"
         cp "$src" "$TARGET/.claude/skills/${d}.md"
@@ -178,6 +181,7 @@ if [[ -n "$BUSINESS" ]]; then
     echo "==> Copying business skills: $BUSINESS"
     IFS=',' read -ra BIZ_ARR <<< "$BUSINESS"
     for b in "${BIZ_ARR[@]}"; do
+        b="$(trim "$b")"
         src="$LIB/business/${b}.md"
         [[ ! -f "$src" ]] && die "business skill not found: $b"
         cp "$src" "$TARGET/.claude/skills/${b}.md"
@@ -190,6 +194,7 @@ if [[ -n "$META" ]]; then
     echo "==> Copying meta skills: $META"
     IFS=',' read -ra META_ARR <<< "$META"
     for m in "${META_ARR[@]}"; do
+        m="$(trim "$m")"
         src="$LIB/meta/${m}.md"
         [[ ! -f "$src" ]] && die "meta skill not found: $m"
         cp "$src" "$TARGET/.claude/skills/${m}.md"

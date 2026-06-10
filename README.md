@@ -127,6 +127,10 @@ Add `--plugins` to any mode to also install the recommended Claude Code plugins 
 
 This requires the `claude` CLI to be installed and in PATH. Plugins install globally — once per machine, not per project.
 
+### Optional: devcontainer
+
+The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed Linux environment (requires Docker + a devcontainer-aware tool such as VS Code Dev Containers or the `devcontainer` CLI). It runs the same on macOS, Windows/WSL2, and Linux hosts. It is **not** required to install or use Loadout — `install.sh` and `wizard.sh` are pure bash and run anywhere, with or without the container.
+
 ## What gets installed
 
 The script copies into `<project>/CLAUDE.md` and `<project>/.claude/skills/`:
