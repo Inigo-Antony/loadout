@@ -1,324 +1,78 @@
 ---
 name: profile-me
-description: Deepen the operator's CLAUDE.md and generate personal skill files from an interview. Invoke when the user says "profile me", "personalize this setup", "build me a skill for X", or just after install.sh --wizard has done the basic pass. The skill conducts a Phase-1 interview (including asking for paths to reference markdown), synthesises a refined identity + voice in Phase 2, and in Phase 3 writes new .claude/skills/*.md files and updates CLAUDE.md without clobbering user edits.
+description: Refresh the personal layer from evidence — mine this session or an interview for voice, decisions, and recurring workflows, then update CLAUDE.md and personal skills. Invoke on "profile me", "learn from this session", or "make this a skill".
 ---
 
 # Profile Me
 
-A meta-workflow that turns a conversation about *how the user actually works* into:
+The compounding engine. Sessions leave a trace — decisions made, corrections given, workflows repeated, skills that fired or misfired. This skill turns that trace into a sharper personal layer: an updated `CLAUDE.md` and refreshed `.claude/skills/*.md`. Run it repeatedly; each pass should make the next session start more "you".
 
-1. A refined `CLAUDE.md` (identity, voice, tooling, standing rules).
-2. One or more domain-specific skill files written into `.claude/skills/`.
-3. A short "what changed and why" report so the user can audit the writes.
+Two modes. Pick by what evidence exists.
 
-This skill assumes `install.sh --wizard` has already produced a baseline
-`CLAUDE.md`. If it hasn't, run the wizard first or ask the user to confirm
-they want to start from a blank slate.
+## Mode A — Session mining (preferred when there's a session to mine)
 
-## When to invoke
+Invoke at the end of a substantial session, or pointed at one ("learn from this session", "update my profile from what we just did").
 
-- User says "profile me", "personalize Claude for me", "set up my CLAUDE.md properly".
-- User describes a recurring workflow and says "make this a skill" or "I want Claude to help me do this every time".
-- After `install.sh --wizard` completes, the install message points the user here.
-- User wants to add new skills to an existing personalized setup (re-invocation).
+### A1. Harvest the trace
 
-## When NOT to invoke
+Scan the conversation (and, if installed, claude-mem's record of it) for five signal types:
 
-- The user wants a single one-off task done — just do it; don't codify yet.
-- The user is asking general questions about Claude Code — point them at docs.
-- No `CLAUDE.md` exists yet and the user wants to start from zero — run the
-  install wizard first.
+1. **Corrections** — every time the user redirected output ("shorter", "no bullets", "use Podman not Docker", "stop asking, just do it"). Corrections are the highest-grade profile signal; they are revealed preference, not stated preference.
+2. **Decisions + rationale** — non-obvious choices and the principle stated for them (see `reasoning-education`). These become standing rules or skill content.
+3. **Voice in the wild** — how the user actually writes when they're not answering interview questions. Sentence length, bluntness, vocabulary that recurs.
+4. **Skill hits and misses** — which skills fired and helped, which fired and were ignored or corrected, which workflow had *no* skill and clearly wanted one (the same multi-step dance performed twice = a candidate).
+5. **Friction** — steps the user did manually and grudgingly. The "most annoying step" is the highest-value thing to codify.
 
-## Inputs
+### A2. Sort into the two write paths
 
-- A short conversation (this one).
-- Optionally: paths to reference markdown files (notes, blog posts, CV, a
-  prior CLAUDE.md, READMEs of past projects). One interview question
-  explicitly asks for these.
-- Write access to `<project>/CLAUDE.md` and `<project>/.claude/skills/`.
-
-## Outputs
-
-- An updated `<project>/CLAUDE.md` (a NEW commit / new file, not an in-place
-  edit that destroys user changes — see "Idempotency" below).
-- Zero or more new files under `<project>/.claude/skills/`, one per
-  codified workflow.
-- A "delta report" printed back to the user.
-
----
-
-## Phase 1 — Discovery
-
-Ask each question in order. Don't propose skills or rewrite CLAUDE.md until
-all are answered. Keep the user's answers verbatim in working memory — the
-voice you adopt in the skill files should mirror the voice they used in the
-interview.
-
-### Q1. What does a typical "good day at the keyboard" look like for you?
-
-Open-ended on purpose. Listen for:
-- Time horizon (one big push vs. many small tasks)
-- Tools mentioned by name (editors, CLIs, MCPs)
-- Implicit voice — short blunt sentences vs. long expository ones
-
-### Q2. What three workflows do you repeat most often, in order of frequency?
-
-Each one is a candidate skill. Examples of what to fish out:
-- "I research a stock before investing" → `investment-research.md`
-- "I journal trades I made" → `options-trading-journal.md`
-- "I write weekly client status updates" → `client-status-update.md`
-- "I triage GitHub issues on Monday morning" → `monday-issue-triage.md`
-
-For each, ask:
-- What's the input? (a ticker, a trade, a meeting transcript, a repo)
-- What's the output? (a memo, a markdown journal entry, an email, a PR)
-- What's the step that's most annoying when you do it manually?
-
-The "most annoying step" is usually the highest-value thing for Claude to
-own. The skill should encode the *correction* for that step.
-
-### Q3. Who reads what you produce?
-
-- Just you (private notes, journals)
-- A small audience you know (clients, teammates)
-- A public audience (blog readers, paper reviewers)
-- A mix — name the mix
-
-Audience drives default verbosity, formality, and whether the skill includes
-a "publish" step.
-
-### Q4. What voice do you NOT want?
-
-Easier than asking the positive form. Common answers worth probing:
-- "no corporate-speak"
-- "no LLM throat-clearing" (great question, I hope this helps, as an AI…)
-- "no bullet-point soup when a paragraph would do"
-- "no over-hedging"
-
-Record the negatives verbatim — they become explicit don't-do rules in
-CLAUDE.md.
-
-### Q5. What are your tooling non-negotiables?
-
-- OS, shell, package manager
-- Default language(s) and any allergies (e.g. "don't suggest Java", "no
-  bash for anything over 50 lines — use Python")
-- Containers / runtime (Docker, Podman, native, devcontainer)
-- MCP servers you use regularly
-- File / repo conventions (monorepo? naming? branch model?)
-
-### Q6. Paths to reference markdown files.
-
-**This question is mandatory.** Phrase it like:
-
-> "Paste paths to any markdown files that describe how you work — notes, a
-> blog post, your CV, a prior CLAUDE.md, the README of a project you're
-> proud of. I'll read them and pull voice + identity signals. Comma-separated
-> absolute paths, or 'skip' if you'd rather not."
-
-For each path provided:
-1. Read the file with the `Read` tool.
-2. Extract: candidate name, role lines, voice style (short vs. long
-   sentences, presence of headings, use of first person), topical
-   keywords, recurring phrasings.
-3. **Show the user what you extracted.** Format:
-
-   ```
-   From /home/maya/blog/2026-04-shipping-fast.md:
-     - Voice tilt: concise; you average ~9 words per sentence.
-     - Identity signal: "I ship one product per quarter, mostly to small B2B niches."
-     - Vocabulary: "ship", "niche", "unit economics", "moat" appear repeatedly.
-     - Recommendation: lift "ship one product per quarter" into CLAUDE.md's "Who I am" line.
-   ```
-
-4. Ask: "accept these signals into your profile? (y / n / edit)"
-
-Do not silently overwrite anything based on extracted signals — surface them,
-get a confirmation, then apply.
-
-### Q7. Anything I should know about how this profile should evolve?
-
-- Will the user re-run this skill quarterly? Annually? Never?
-- Are there other people in the household / team who will use this CLAUDE.md?
-- Is there a "draft / final" distinction (e.g. "treat this as a draft I'll
-  edit", vs. "treat my answers as canonical")?
-
----
-
-## Phase 2 — Synthesis
-
-Once all questions are answered, do NOT immediately write files. First,
-produce a synthesis document inline for the user to review:
+**Direct-apply (no approval gate): voice and profile facts.**
+Corrections to voice, tooling facts, OS/language preferences, and the current-focus line are low-risk and self-evidencing — apply them straight to `CLAUDE.md` with `Edit` (never `Write`; never clobber hand-edits; create `CLAUDE.md.bak` first if none exists). Then report what changed:
 
 ```
-PROPOSED CHANGES
-
-CLAUDE.md changes:
-  - "Who I am" line: <before> → <after>
-  - Voice paragraph: add "no LLM throat-clearing"; drop "balanced — let me
-    show working" because user said "I want shorter".
-  - Tooling: change "Python" → "TypeScript + Bun"; add "Podman, not Docker".
-
-New skill files:
-  1. .claude/skills/options-trading-journal.md
-     Trigger: "I made a trade", "journal this trade", a paste of a fill notification.
-     Output: a markdown journal entry with thesis, entry, planned exit, post-mortem template.
-
-  2. .claude/skills/weekly-client-status.md
-     Trigger: "draft my client status update", "Friday status".
-     Output: a markdown report keyed by project, with shipped / in-flight / blockers.
-
-  3. .claude/skills/stock-research.md
-     Trigger: a ticker symbol, "research $TICKER".
-     Output: a 1-page memo with thesis, base rate, key risk, decision.
-
-DELTA REPORT will also include:
-  - which signals from reference markdown were accepted
-  - which fields were left at wizard defaults
-  - what is intentionally NOT being changed
+CLAUDE.md updated:
+  ~ Voice: added "no bullet-point soup in prose" (you corrected this twice)
+  ~ Tooling: Docker → Podman (correction, this session)
 ```
 
-Ask: "approve all / approve some / iterate". Only proceed to Phase 3 on an
-explicit approval.
-
----
-
-## Phase 3 — Execution
-
-### 3a. Update CLAUDE.md (idempotent)
-
-**Never blindly overwrite.** The wizard or a prior run may have produced
-content the user has hand-edited. Strategy:
-
-1. Read existing `CLAUDE.md`.
-2. Locate the section headers (`## Who I am`, `## Voice`, `## Tooling`,
-   `## Standing rules`, `## Operator-specific notes`).
-3. For each section the interview produced new content for, ASK the user:
-   "your current section says X. proposed update says Y. (replace / merge /
-   skip)?"
-4. Apply only the changes the user approved, using `Edit` with the exact
-   old_string → new_string. Don't use `Write` (which clobbers).
-5. If `CLAUDE.md.bak` doesn't exist, create one before writing.
-
-### 3b. Generate skill files
-
-For each approved workflow:
-
-1. Compose the frontmatter:
-   ```yaml
-   ---
-   name: <kebab-case-name>
-   description: <one sentence on when to invoke — keep ~50 tokens; specific>
-   ---
-   ```
-2. Compose the body using this template:
-
-   ```markdown
-   # <Title>
-
-   ## When to invoke
-   <2–3 specific triggers in the user's own words from Q2>
-
-   ## Inputs
-   <what the user provides — paste, path, URL, ticker, etc.>
-
-   ## Steps
-   1. <step that worked first try in their description>
-   2. <the "annoying step" with the correction encoded>
-   3. <output formatting step>
-
-   ## Output format
-   <markdown structure spec — be exact about headings/fields>
-
-   ## When NOT to invoke
-   <edge cases the user mentioned or that are obvious from the workflow>
-
-   ## See also
-   <cross-refs to other skills the user already has>
-   ```
-
-3. **Check for collisions.** Before writing
-   `.claude/skills/<name>.md`, check if a file with that name already
-   exists. If yes:
-   - If file content is identical → no-op, report "already present".
-   - If different → write to `.claude/skills/<name>.v2.md` and tell the
-     user; let them merge manually. Never silently overwrite.
-
-4. Use the `Write` tool (new files) or `Edit` (existing). Save under
-   `<project>/.claude/skills/<name>.md`.
-
-### 3c. Print the delta report
+**Propose-as-diff (approval required): behavioral skills.**
+New skills, or substantive rewrites of existing skill bodies, change how future sessions *behave* — and a misread session bakes the misreading in. Present each as a diff or full draft with the evidence line attached:
 
 ```
-Profile updated.
-
-CLAUDE.md:
-  ✓ Voice paragraph replaced (user-approved)
-  ✓ Tooling section: Python → TypeScript + Bun
-  • "Who I am" line left untouched (user chose "skip")
-
-New skills written:
-  + .claude/skills/options-trading-journal.md
-  + .claude/skills/weekly-client-status.md
-  ! .claude/skills/stock-research.md — name collision with existing file;
-    wrote to stock-research.v2.md for manual merge
-
-Reference signals applied:
-  ✓ /home/maya/blog/2026-04-shipping-fast.md → voice + "ship/niche" vocab
-  • /home/maya/cv.md → skipped on user's request
-
-Re-run me anytime you want to add more skills. Existing files won't be
-overwritten — collisions go to *.v2.md and you merge.
+PROPOSED: .claude/skills/sponsor-research.md  (new)
+  Evidence: you ran this workflow twice this session; the second run added
+  the Trustpilot check after the first one missed a weak sponsor.
+  [draft follows]
+Approve, edit, or drop?
 ```
 
----
+Only write on explicit approval. Name collisions go to `<name>.v2.md` for manual merge — never silently overwrite.
 
-## Idempotency strategy
+### A3. Close the loop
 
-This skill MUST be safely re-runnable. Rules:
+End with a delta report: what was applied, what was proposed, what evidence was *not* acted on (one occurrence ≠ a pattern — log it for next time instead). If a proposed skill came from a workflow that has never had a clean end-to-end run, route it through `walkthrough-then-codify` first.
 
-1. **CLAUDE.md** is edited section-by-section with user approval per section.
-   A `.bak` is written before any change. The skill never uses `Write` on
-   CLAUDE.md after the initial wizard pass.
-2. **Skill files** use collision-then-version naming
-   (`foo.md` exists → write `foo.v2.md`, tell the user). Never silent
-   overwrite.
-3. **The skill keeps no state between runs.** If the user re-invokes 3
-   months later with new workflows, treat it as a fresh interview — but
-   read the existing CLAUDE.md and skill list first so you don't re-ask
-   things that are already settled. Ask: "you already have skills for
-   trading-journal, client-status, and stock-research. add to the list, or
-   refine one of them?"
+## Mode B — Interview (no session to mine, or first deep pass after the wizard)
 
----
+Compressed to the questions that earn their tokens. Keep the user's answers verbatim — the skill files should mirror the voice they used answering.
 
-## Anti-patterns
+1. **What three workflows do you repeat most often?** For each: input, output, and the most annoying manual step (that step is what the skill must own).
+2. **What voice do you NOT want?** Negatives are sharper than positives ("no corporate-speak", "no LLM throat-clearing", "no over-hedging"). They become explicit don't-rules.
+3. **Tooling non-negotiables.** OS, languages and allergies, containers, MCPs, repo conventions.
+4. **Reference markdown.** Ask for paths to notes/CV/prior CLAUDE.md/blog posts. Read them, extract voice and identity signals, **show what you extracted, and confirm before applying** — reference files may be old or written for a different audience.
+5. **What outcome are you driving toward?** This keeps the profile pointed at brainstorm → shipped result, not at tooling for its own sake.
 
-- **Codifying a workflow the user only mentioned once in passing.** Q2
-  asks for the *three most frequent*. Stick to those.
-- **Writing a "general" skill instead of a specific one.** "Help with
-  finances" is unfireable. "Journal a stock or options trade given a fill
-  paste" is.
-- **Filling in defaults from the wizard without flagging.** If the user
-  said nothing about, say, file naming conventions, the new skill must NOT
-  invent one. Leave that section out, or ask.
-- **Rewriting voice based on reference markdown without confirming.** The
-  reference files might be old, written for a different audience, or not
-  representative. Always surface signals, never apply silently.
-- **Codifying from a hypothetical run.** If the user describes a workflow
-  but has never actually completed it the way they're describing, hand off
-  to `walkthrough-then-codify` first — do one real run together, then
-  codify.
+Then follow the same two write paths as Mode A: voice/profile facts applied directly, behavioral skills proposed for approval.
 
----
+## Rules that hold in both modes
+
+- **Evidence or it doesn't ship.** Codify from things that happened (twice, ideally), never from a hypothetical. Speculative skills are unfireable and bloat the set.
+- **The set must stay small.** Each new skill is a standing ~50-token tax. When proposing one, also ask whether an existing skill should be retired or absorbed (`recursive-refinement` prunes; the `governing-algorithm` step 2 deletes). A profile-me pass that only ever adds is failing.
+- **Specific beats general.** "Journal an options trade from a fill paste" fires; "help with finances" never does.
+- **Don't fill silence with defaults.** If the user said nothing about file naming, the skill says nothing about file naming.
+- **Idempotent re-runs.** Read the existing CLAUDE.md and skill list first; ask "add, or refine one of these?" instead of re-interviewing settled ground.
 
 ## See also
 
-- Anthropic's skill-creator plugin — single-skill packaging; this
-  meta-skill effectively batch-runs it for several workflows at once.
-- `core/skills/operating/walkthrough-then-codify.md` — the methodology this
-  skill operationalises for the codification step.
-- `core/skills/operating/recursive-refinement.md` — what to do when a
-  generated skill misfires on its first real run.
-- `.brainstorm/wizard.sh` — the install-time wizard that produces the
-  baseline CLAUDE.md this skill refines.
+- `core/skills/operating/walkthrough-then-codify.md` — the codification method for workflows that need a clean run first
+- `core/skills/operating/recursive-refinement.md` — fixing a generated skill after its first misfire
+- `core/skills/operating/handoff-log.md` — the decision records Mode A mines
