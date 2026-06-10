@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
 #
-# install.sh — populate a project's .claude/ directory from Loadout.
+# install.sh — set up a project with Loadout: Layer 1 (commodity engineering
+# frameworks) + Layer 2 (the personal layer from this repo).
+#
+# By default the install is LAYERED: it provisions the Layer 1 plugins
+# (superpowers, GSD, context-mode, claude-mem, skill-creator, frontend-design)
+# via the `claude` CLI, then copies the Layer 2 skills and the operator
+# profile (with its Layer Contract). Pass --standalone to skip Layer 1
+# entirely — pure bash, zero external dependencies.
 #
 # Usage:
 #   ./install.sh <target-dir>                                 # default: wizard
 #   ./install.sh <target-dir> --wizard
-#   ./install.sh <target-dir> --preset <name> [--plugins]
+#   ./install.sh <target-dir> --preset <name> [--standalone]
 #   ./install.sh <target-dir> --custom \
 #       [--domains <list>] [--business <list>] [--meta <list>] \
-#       [--plugins] [--no-claude-overwrite]
+#       [--standalone] [--no-claude-overwrite]
 #
 # Presets:
 #   academic-research   scientific-python, academic-writing, data-analysis, report-generation
@@ -27,7 +34,7 @@
 #   --business outcome-framing,client-services
 #   --meta monetize-or-opensource
 #
-# --plugins (optional) runs `claude plugin install` for the recommended plugin set.
+# --standalone (optional) skips Layer 1 plugin provisioning; copy-only, no deps.
 # --no-claude-overwrite (optional) skips copying CLAUDE.md (used by wizard.sh).
 
 set -euo pipefail
@@ -47,8 +54,12 @@ usage() {
 Usage:
   ./install.sh <target-dir>                                 # default: wizard
   ./install.sh <target-dir> --wizard
-  ./install.sh <target-dir> --preset <name> [--plugins]
-  ./install.sh <target-dir> --custom [--domains <list>] [--business <list>] [--meta <list>] [--plugins]
+  ./install.sh <target-dir> --preset <name> [--standalone]
+  ./install.sh <target-dir> --custom [--domains <list>] [--business <list>] [--meta <list>] [--standalone]
+
+Default install is layered: Layer 1 plugins (superpowers, GSD, context-mode,
+claude-mem, skill-creator, frontend-design) via the claude CLI, then the
+Loadout personal layer on top. --standalone skips Layer 1 (pure bash, zero deps).
 
 Presets:
   academic-research, saas-launch, freelance-services,
@@ -70,7 +81,7 @@ PRESET=""
 DOMAINS=""
 BUSINESS=""
 META=""
-INSTALL_PLUGINS="false"
+STANDALONE="false"
 NO_CLAUDE_OVERWRITE="false"
 
 while [[ $# -gt 0 ]]; do
@@ -81,7 +92,7 @@ while [[ $# -gt 0 ]]; do
         --domains)              DOMAINS="$2";                   shift 2 ;;
         --business)             BUSINESS="$2";                  shift 2 ;;
         --meta)                 META="$2";                      shift 2 ;;
-        --plugins)              INSTALL_PLUGINS="true";         shift   ;;
+        --standalone)           STANDALONE="true";              shift   ;;
         --no-claude-overwrite)  NO_CLAUDE_OVERWRITE="true";     shift   ;;
         --help|-h)              usage; exit 0 ;;
         *)                      die "unknown flag: $1" ;;
@@ -95,7 +106,7 @@ done
 if [[ "$MODE" == "wizard" ]]; then
     WIZARD="$LIB/wizard.sh"
     [[ -f "$WIZARD" ]] || die "wizard.sh not found at $WIZARD"
-    export LIB
+    export LIB STANDALONE
     exec bash "$WIZARD" "$TARGET"
 fi
 
@@ -143,7 +154,32 @@ case "$PRESET" in
         ;;
 esac
 
-# ---- Build target structure ----
+# ---- Layer 1: commodity engineering frameworks (default; skip with --standalone) ----
+# Plugins install globally — once per machine, not per project. Loadout (Layer 2)
+# assumes these exist and delegates engineering execution to them.
+if [[ "$STANDALONE" != "true" ]]; then
+    echo "==> Provisioning Layer 1 (superpowers, GSD, context-mode, claude-mem, skill-creator, frontend-design)"
+    if ! command -v claude >/dev/null 2>&1; then
+        echo "  WARNING: 'claude' CLI not found in PATH; skipping Layer 1 provisioning."
+        echo "  Layer 2 still installs. To finish later: install Claude Code, then rerun,"
+        echo "  or use --standalone to silence this warning."
+    else
+        PLUGINS=(
+            "superpowers@obra"
+            "gsd"
+            "context-mode"
+            "claude-mem@thedotmack"
+            "skill-creator@anthropics"
+            "frontend-design@anthropics"
+        )
+        for p in "${PLUGINS[@]}"; do
+            echo "  installing: $p"
+            claude plugin install "$p" || echo "    (failed; continue)"
+        done
+    fi
+fi
+
+# ---- Layer 2: build target structure ----
 echo "==> Installing into: $TARGET/.claude/"
 mkdir -p "$TARGET/.claude/skills"
 
@@ -207,29 +243,6 @@ if [[ -n "$META" ]]; then
             info "sub/open-sourcing.md, sub/monetization.md"
         fi
     done
-fi
-
-# ---- Plugins ----
-if [[ "$INSTALL_PLUGINS" == "true" ]]; then
-    echo "==> Installing recommended plugins"
-    if ! command -v claude >/dev/null 2>&1; then
-        echo "  WARNING: 'claude' command not found in PATH; skipping plugin install."
-        echo "  Install Claude Code first, then run: $0 $TARGET --plugins"
-    else
-        # The recommended baseline. Edit this block to change the set.
-        PLUGINS=(
-            "skill-creator@anthropics"
-            "frontend-design@anthropics"
-            "superpowers@obra"
-            "claude-mem@thedotmack"
-            "context-mode"
-            "gsd"
-        )
-        for p in "${PLUGINS[@]}"; do
-            echo "  installing: $p"
-            claude plugin install "$p" || echo "    (failed; continue)"
-        done
-    fi
 fi
 
 echo ""
