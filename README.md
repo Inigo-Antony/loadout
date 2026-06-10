@@ -1,8 +1,10 @@
 # Loadout
 
-A modular library of operating instructions for Claude (Code, Cowork, web/desktop). The library is the master source; each project gets a curated subset copied into its `.claude/` directory by `install.sh`.
+A modular library of operating instructions for Claude Code, with skill bodies portable to Claude web/desktop Projects. The library is the master source; each project gets a curated subset copied into its `.claude/` directory by `install.sh`.
 
 > What's your Claude loadout? Pick a preset, run the wizard, or compose your own.
+
+Unlike engineering-only config frameworks, Loadout personalizes Claude to how *you* think and work — spanning technical, business, and cognitive skills — and stays token-light by loading each skill body only when it's matched. The goal is to turn brainstorming into shipped outcomes, not to accumulate tooling.
 
 ## The shape in one diagram
 
@@ -23,12 +25,8 @@ loadout/
 │       │   └── systems-thinking.md
 │       └── operating/               ← how to work with Claude
 │           ├── token-discipline.md
-│           ├── plan-then-execute.md
 │           ├── walkthrough-then-codify.md
-│           ├── subagents-and-teams.md
 │           ├── recursive-refinement.md
-│           ├── skill-creator.md
-│           ├── incident-response.md
 │           └── profile-me.md        ← in-Claude personalization skill
 ├── domains/                         ← technical, cherry-pick per project
 │   ├── scientific-python.md
@@ -138,7 +136,7 @@ The script copies into `<project>/CLAUDE.md` and `<project>/.claude/skills/`:
 - `CLAUDE.md` — operator profile (placeholders filled by wizard, or left for manual edit in preset/custom mode)
 - `.claude/pitfalls.md` — reference for designing/auditing skills
 - `.claude/skills/thinking/*.md` — first-principles, systems-thinking
-- `.claude/skills/operating/*.md` — token discipline, plan mode, walkthrough, sub-agents, recursive refinement, skill creator, incident response, profile-me
+- `.claude/skills/operating/*.md` — token discipline, walkthrough-then-codify, recursive refinement, profile-me, plus the five governance policies
 - `.claude/skills/<domain>.md` — selected domain files
 - `.claude/skills/<business>.md` — selected business files
 - `.claude/skills/<meta>.md` plus `sub/*.md` — selected meta files (sub-skills load automatically when parent meta-skill is included)
@@ -190,7 +188,7 @@ The library is a living thing. Per `core/skills/operating/recursive-refinement.m
 
 1. When a skill misfires, fix the immediate run, then update the skill body so the failure can't recur.
 2. When a skill misfires repeatedly across iterations, retire it and re-author from scratch (`core/skills/operating/walkthrough-then-codify.md`).
-3. When you build a new workflow you'll repeat, codify it via `core/skills/operating/skill-creator.md` (or the Anthropic plugin if installed).
+3. When you build a new workflow you'll repeat, walk it manually first, then codify via `core/skills/operating/walkthrough-then-codify.md` (the Anthropic skill-creator plugin does the packaging).
 4. When the ecosystem ships better tools, scan `ecosystem/external-skills.md` for additions; install via `ecosystem/plugins-to-install.md`.
 
 Don't download skills from strangers without reading them first — they're instruction files; treat them like running someone's binary.

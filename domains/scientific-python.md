@@ -86,4 +86,4 @@ Don't paper over it. Either:
 
 - `core/skills/thinking/first-principles.md` — for choosing assumptions to keep vs question
 - `core/skills/thinking/systems-thinking.md` — for problems with feedback (energy systems, controls)
-- `core/skills/operating/plan-then-execute.md` — model architecture decisions deserve plan mode
+- The installed planning rhythm (superpowers/GSD) — model architecture decisions deserve plan mode

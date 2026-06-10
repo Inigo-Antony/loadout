@@ -314,9 +314,8 @@ This skill MUST be safely re-runnable. Rules:
 
 ## See also
 
-- `core/skills/operating/skill-creator.md` — single-skill authoring; this
-  meta-skill effectively batch-runs skill-creator for several workflows at
-  once.
+- Anthropic's skill-creator plugin — single-skill packaging; this
+  meta-skill effectively batch-runs it for several workflows at once.
 - `core/skills/operating/walkthrough-then-codify.md` — the methodology this
   skill operationalises for the codification step.
 - `core/skills/operating/recursive-refinement.md` — what to do when a

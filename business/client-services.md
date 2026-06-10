@@ -88,4 +88,4 @@ The cheapest revenue is the next project from a current client. After handoff:
 - `business/outcome-framing.md` — for discovery and proposal language
 - `business/ai-consulting.md` — for implementation-heavy engagements specifically
 - `business/automation-workflows.md` — common deliverable category
-- `core/skills/operating/plan-then-execute.md` — internally, plan every phase
+- The installed planning rhythm (superpowers/GSD) — internally, plan every phase

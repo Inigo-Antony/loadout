@@ -49,9 +49,8 @@ core/                  → always installed; identity template, voice, tooling r
   pitfalls.md          → reference, not auto-loaded; consult before designing skills
   skills/
     thinking/          → first-principles.md, systems-thinking.md
-    operating/         → plan-then-execute, token-discipline, walkthrough-then-codify,
-                         subagents-and-teams, recursive-refinement, skill-creator,
-                         incident-response, profile-me
+    operating/         → token-discipline, walkthrough-then-codify,
+                         recursive-refinement, profile-me
 domains/               → technical cherry-picks (scientific-python, frontend, backend-saas,
                          engineering-simulation, report-generation, …)
 business/              → commercial workflows (outcome-framing, client-services,
@@ -71,7 +70,7 @@ TRADEMARK.md           → Loadout name + branding policy
 
 1. When a skill misfires: fix the immediate run, then update the skill body.
 2. When a skill misfires twice: retire it and re-author from `walkthrough-then-codify`.
-3. New repeatable workflow → codify via `core/skills/operating/skill-creator.md`.
+3. New repeatable workflow → walk it manually, then codify via `core/skills/operating/walkthrough-then-codify.md` (the Anthropic skill-creator plugin does the packaging).
 4. New tool/plugin available → check `ecosystem/external-skills.md`.
 
 Do not add skills to this library from untrusted external sources without reading them fully. Skill files are instructions; treat them like running someone's binary.

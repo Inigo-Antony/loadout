@@ -24,7 +24,7 @@ Spinning up 30 skills, 15 sub-agents, three MCPs, and a custom hook system befor
 
 ## 6. Premature parallelisation
 
-Sub-agents or agent teams when default mode would have worked. Costs more tokens, more latency, more failure modes. Default mode unless you have a specific reason. See `core/skills/operating/subagents-and-teams.md`.
+Sub-agents or agent teams when default mode would have worked. Costs more tokens, more latency, more failure modes. Default mode unless you have a specific reason. See `core/skills/operating/orchestration-policy.md`.
 
 ## 7. Sub-agents that needed to be a team
 

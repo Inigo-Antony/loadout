@@ -154,6 +154,5 @@ If skimming doesn't surface those, the document is structured for the writer, no
 
 - `domains/academic-writing.md` — for papers, theses, citation-heavy academic output
 - `business/outcome-framing.md` — for the cover-page takeaway and the recommendation framing
-- `core/skills/operating/plan-then-execute.md` — outline before prose belongs in plan mode
-- `.brainstorm/new-skills/engineering-simulation.md` — common upstream when the document delivers a simulation result
-- `.brainstorm/new-skills/product-launch.md` — common upstream when the document is a launch one-pager
+- `domains/engineering-simulation.md` — common upstream when the document delivers a simulation result
+- `business/product-launch.md` — common upstream when the document is a launch one-pager

@@ -121,5 +121,5 @@ For long-form delivery, hand off to `report-generation`.
 - `domains/scientific-python.md` — for the numerics layer (solvers, validation patterns, plotting)
 - `core/skills/thinking/systems-thinking.md` — for systems with feedback (controls, market interaction, dispatch)
 - `core/skills/thinking/first-principles.md` — for choosing which assumptions to keep vs question
-- `core/skills/operating/plan-then-execute.md` — the system frame deserves plan mode before any code
-- `.brainstorm/new-skills/report-generation.md` — for delivering the result as a defensible PDF
+- The installed planning rhythm (superpowers/GSD) — the system frame deserves plan mode before any code
+- `domains/report-generation.md` — for delivering the result as a defensible PDF

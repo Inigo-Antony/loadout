@@ -135,5 +135,5 @@ Reuse the kit shape for every launch. Each subsequent launch gets faster.
 - `business/outcome-framing.md` — the page copy, the tagline, the recommendation framing
 - `business/seo-and-marketing.md` — sustained distribution after the launch spike fades
 - `business/content-creation.md` — the launch retro and ongoing channel
-- `.brainstorm/new-skills/pdf-document-generation.md` — the launch one-pager and post-launch report
-- `core/skills/operating/plan-then-execute.md` — the launch is a plan-mode artefact in itself
+- `domains/report-generation.md` — the launch one-pager and post-launch report
+- The installed planning rhythm (superpowers/GSD) — the launch is a plan-mode artefact in itself

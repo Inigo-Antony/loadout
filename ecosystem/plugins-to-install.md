@@ -140,5 +140,5 @@ Install only what you'd be sad to lose.
 ## See also
 
 - `core/skills/operating/token-discipline.md` — why these plugins matter at the context level
-- `core/skills/operating/skill-creator.md` — the operating skill that delegates to skill-creator plugin
+- `core/skills/operating/walkthrough-then-codify.md` — walk the workflow first; the skill-creator plugin does the packaging
 - `ecosystem/external-skills.md` — broader curated reference

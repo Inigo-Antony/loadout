@@ -79,7 +79,6 @@ If any of these is absent or ambiguous, ask before generating.
 
 ## See also
 
-- `core/skills/operating/plan-then-execute.md` — default mode for any feature work
-- `core/skills/operating/subagents-and-teams.md` — when work splits into independent components
+- The installed planning rhythm (superpowers/GSD) — default mode for any feature work
 - `domains/infra-containers.md` — for deployment, container builds, dev environment
 - `domains/frontend.md` — for the frontend slice

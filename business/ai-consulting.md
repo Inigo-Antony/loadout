@@ -126,4 +126,4 @@ The narrower your positioning, the easier to find clients and command premium pr
 - `business/outcome-framing.md` — for proposals and pricing
 - `business/client-services.md` — engagement structure
 - `business/automation-workflows.md` — frequent deliverable category
-- `core/skills/operating/plan-then-execute.md` — internal discipline during delivery
+- The installed planning rhythm (superpowers/GSD) — internal discipline during delivery
