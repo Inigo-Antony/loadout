@@ -1,9 +1,15 @@
 # Loadout
 
-A thin personal layer for Claude Code that sits **on top of** the commodity engineering frameworks — superpowers, GSD, context-mode, claude-mem. Those frameworks own engineering execution: planning, TDD, subagent orchestration, context sandboxing, cross-session memory. Loadout never rebuilds them. It owns the parts that are irreducibly *yours*:
+Every multiplayer game makes you pick a loadout before you spawn: weapons, perks, equipment. The map is the same for everyone. The ruleset is the same for everyone. The only part that's actually yours is what you choose to carry in.
+
+A Claude Code session starts the same way, except most people re-fight the loadout screen on every project. I kept doing exactly that — new repo, rewrite the same `CLAUDE.md` by hand: my voice, my reasoning defaults, when to brainstorm versus just ship, how much token budget I'm willing to spend before I want the answer. From zero, every time.
+
+Meanwhile I'd already adopted the frameworks that are genuinely good at the engineering side — superpowers, GSD, context-mode, claude-mem. They own planning, TDD, subagent orchestration, context sandboxing, cross-session memory, and they get better for free as their communities improve them. But none of them know anything about *me*. Personalization was never their job, and I kept rebuilding it by hand like that was just the cost of starting a new project.
+
+It isn't. **Loadout** is a thin personal layer that sits **on top of** those commodity frameworks instead of competing with them. It never rebuilds what Layer 1 already does well — it owns the parts that are irreducibly *yours*:
 
 - **Think how you think** — an operator profile (voice, conditional concision, reasoning defaults: first-principles → systems-thinking) and a `profile-me` skill that keeps sharpening it from your real sessions.
-- **Token-light** — a small skill set, progressive disclosure (~50 tokens per skill until matched), and governance that deletes before it adds.
+- **A flat token fee, not a growing tax** — a small skill set, progressive disclosure (~50 tokens per skill always-on, the body free until matched), and governance that deletes before it adds. Personalization costs the same whether a skill is shallow or deep.
 - **Brainstorm → outcome** — the arc from idea to shipped/monetized result: outcome-framing → product-launch → monetize-or-opensource.
 
 > What's your Claude loadout? Pick a preset, run the wizard, or compose your own.
@@ -207,3 +213,11 @@ Distilled from:
 - **MarksInsights** — "How to make money with Claude AI" — 15 income paths and the trade-time-for-money critique
 - **ScriptByAI** — Ultimate Claude Code Resource List 2026 — broader ecosystem map
 - **everything-claude-code** (Affaan Mustafa) — structural conventions, MCP discipline rules
+
+## Comments & Contributions
+
+Loadout grows by adapters, not by rewrites. If your domain or business workflow isn't covered, open a PR — but check `ecosystem/external-skills.md` first. If a best-in-class plugin already exists for your case, the right contribution is usually a thin adapter pointing to it, not a new native skill file.
+
+Found a skill that misfired? Open an issue with the transcript. That's exactly the signal `recursive-refinement` is meant to act on, and it's useful even if you don't fix it yourself.
+
+Questions, disagreements, "this analogy doesn't land for me" — all welcome in the issues tab. This is a personal layer that got open-sourced; tell me where it's still too personal.
