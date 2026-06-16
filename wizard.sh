@@ -100,6 +100,97 @@ pick_one() {
     printf -v "$varname" '%s' "$choice"
 }
 
+# toggle_menu <prompt> <varname> <option1> <option2> ...
+# Numbered checklist. User types one number per line to flip that item's
+# checkbox; the menu redraws after each input. Blank line + Enter confirms
+# the selection. Stores the checked option strings, one per line, into
+# <varname> (read them back with `while IFS= read -r line; do ...; done <<< "$varname"`).
+toggle_menu() {
+    local prompt="$1" varname="$2"; shift 2
+    local opts=("$@")
+    local n=${#opts[@]}
+    local -a checked
+    local i reply idx result=""
+    for ((i = 0; i < n; i++)); do checked[i]=0; done
+    while true; do
+        echo "  $prompt"
+        for ((i = 0; i < n; i++)); do
+            if [[ "${checked[i]}" == "1" ]]; then
+                printf "    %d) [x] %s\n" "$((i + 1))" "${opts[i]}"
+            else
+                printf "    %d) [ ] %s\n" "$((i + 1))" "${opts[i]}"
+            fi
+        done
+        printf "  toggle a number, or press Enter to confirm: "
+        reply=""
+        IFS= read -r reply || true
+        [[ -z "$reply" ]] && break
+        if [[ "$reply" =~ ^[0-9]+$ ]] && (( reply >= 1 && reply <= n )); then
+            idx=$((reply - 1))
+            if [[ "${checked[idx]}" == "1" ]]; then checked[idx]=0; else checked[idx]=1; fi
+        else
+            echo "  enter a number between 1 and $n, or press Enter to finish."
+        fi
+        echo ""
+    done
+    for ((i = 0; i < n; i++)); do
+        [[ "${checked[i]}" == "1" ]] && result+="${opts[i]}"$'\n'
+    done
+    printf -v "$varname" '%s' "$result"
+}
+
+# dedup_csv <comma-separated-list>
+# Removes duplicate entries (order-preserving) from a comma-separated list.
+dedup_csv() {
+    echo "$1" | tr ',' '\n' | awk 'NF && !seen[$0]++' | paste -sd, -
+}
+
+# ensure_skill_drafts_readme
+# Writes the skill-drafts/README.md header once, on first use.
+ensure_skill_drafts_readme() {
+    local f="$TARGET/.claude/skill-drafts/README.md"
+    if [[ ! -f "$f" ]]; then
+        mkdir -p "$TARGET/.claude/skill-drafts"
+        cat > "$f" <<'EOF'
+# Skill drafts
+
+Reference files staged here during a wizard run, one subfolder per category.
+None of these are skills yet -- bash can't author a skill body. In a live
+Claude Code session, run the `walkthrough-then-codify` skill against a
+subfolder to turn its contents into a real skill under `.claude/skills/`.
+
+Staged:
+EOF
+    fi
+}
+
+# stage_skill_draft <category> <comma-separated-reference-paths>
+# Copies the given files into .claude/skill-drafts/<category>/ and records
+# the count in skill-drafts/README.md. Skips paths that don't exist (warns).
+stage_skill_draft() {
+    local category="$1" paths="$2"
+    local dest="$TARGET/.claude/skill-drafts/$category"
+    mkdir -p "$dest"
+    local -a ref_arr
+    IFS=',' read -ra ref_arr <<< "$paths"
+    local p copied=0
+    for p in "${ref_arr[@]}"; do
+        p="$(trim "$p")"
+        [[ -z "$p" ]] && continue
+        if [[ -f "$p" ]]; then
+            cp "$p" "$dest/"
+            copied=$((copied + 1))
+        else
+            echo "    WARNING: not found, skipping: $p"
+        fi
+    done
+    if (( copied > 0 )); then
+        ensure_skill_drafts_readme
+        echo "- $category: $copied file(s) staged in skill-drafts/$category/" >> "$TARGET/.claude/skill-drafts/README.md"
+        info "staged $copied file(s) into .claude/skill-drafts/$category/"
+    fi
+}
+
 # ---- Reference-markdown signal extraction ----
 #
 # We do NOT call out to an LLM here. We pull simple, conservative signals:
