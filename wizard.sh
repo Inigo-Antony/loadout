@@ -387,8 +387,12 @@ META=""
 SHIP_GOAL=""
 CREATE_OUTCOME_SKILL="false"
 SAW_ANY_REAL_OUTCOME="false"
+OUTCOME_SELECTIONS=()
 while IFS= read -r sel; do
-    [[ -z "$sel" ]] && continue
+    [[ -n "$sel" ]] && OUTCOME_SELECTIONS+=("$sel")
+done <<< "$OUTCOME_TOGGLE_RESULT"
+
+for sel in "${OUTCOME_SELECTIONS[@]}"; do
     case "$sel" in
         "$NEW_SKILL_LABEL")
             CREATE_OUTCOME_SKILL="true"
@@ -442,7 +446,7 @@ while IFS= read -r sel; do
             ;;
     esac
     [[ -n "$sel" ]] && SHIP_GOAL="${SHIP_GOAL:+$SHIP_GOAL; }$sel"
-done <<< "$OUTCOME_TOGGLE_RESULT"
+done
 
 if [[ "$SAW_ANY_REAL_OUTCOME" != "true" ]]; then
     BUSINESS="outcome-framing"
