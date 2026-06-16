@@ -369,11 +369,94 @@ ask_multiline "extra notes" EXTRA_NOTES
 
 hr
 say "Q7. Last, and most important: what OUTCOME are you driving toward?"
-echo "    Not the domain — the result. What ships in the next 90 days, and what"
-echo "    does success look like: revenue, users, a publication, a signed client,"
-echo "    a job offer? One sentence. This selects the business + meta skills and"
-echo "    becomes the 'current focus' line of your profile."
-ask "outcome" "" SHIP_GOAL
+echo "    Not the domain — the result. What ships in the next 90 days: revenue,"
+echo "    users, a publication, a signed client, a job offer? Toggle as many as apply."
+OUTCOME_OPTS=(
+    "ship/launch a SaaS or product"
+    "land consulting/freelance clients"
+    "grow content/audience"
+    "land a job or publish research"
+    "not sure yet"
+    "other (type your own)"
+)
+toggle_menu "Toggle the outcomes that apply:" OUTCOME_TOGGLE_RESULT \
+    "${OUTCOME_OPTS[@]}" "$NEW_SKILL_LABEL"
+
+BUSINESS=""
+META=""
+SHIP_GOAL=""
+CREATE_OUTCOME_SKILL="false"
+SAW_ANY_REAL_OUTCOME="false"
+while IFS= read -r sel; do
+    [[ -z "$sel" ]] && continue
+    case "$sel" in
+        "$NEW_SKILL_LABEL")
+            CREATE_OUTCOME_SKILL="true"
+            continue
+            ;;
+        "not sure yet")
+            continue
+            ;;
+        "ship/launch a SaaS or product")
+            BUSINESS="${BUSINESS:+$BUSINESS,}outcome-framing,digital-products"
+            META="${META:+$META,}monetize-or-opensource"
+            SAW_ANY_REAL_OUTCOME="true"
+            ;;
+        "land consulting/freelance clients")
+            BUSINESS="${BUSINESS:+$BUSINESS,}client-services,outcome-framing,ai-consulting"
+            SAW_ANY_REAL_OUTCOME="true"
+            ;;
+        "grow content/audience")
+            BUSINESS="${BUSINESS:+$BUSINESS,}content-creation,seo-and-marketing,digital-products"
+            SAW_ANY_REAL_OUTCOME="true"
+            ;;
+        "land a job or publish research")
+            BUSINESS="${BUSINESS:+$BUSINESS,}outreach-applications"
+            SAW_ANY_REAL_OUTCOME="true"
+            ;;
+        "other (type your own)")
+            ask "describe your outcome in your own words" "" OTHER_OUTCOME_TEXT
+            if [[ -n "$OTHER_OUTCOME_TEXT" ]]; then
+                other_lower="$(echo "$OTHER_OUTCOME_TEXT" | tr '[:upper:]' '[:lower:]')"
+                case "$other_lower" in
+                    *saas*|*product*|*launch*|*indie*)
+                        BUSINESS="${BUSINESS:+$BUSINESS,}outcome-framing,digital-products"
+                        META="${META:+$META,}monetize-or-opensource"
+                        ;;
+                    *consult*|*client*|*freelance*)
+                        BUSINESS="${BUSINESS:+$BUSINESS,}client-services,outcome-framing,ai-consulting"
+                        ;;
+                    *content*|*blog*|*newsletter*|*audience*|*creator*)
+                        BUSINESS="${BUSINESS:+$BUSINESS,}content-creation,seo-and-marketing,digital-products"
+                        ;;
+                    *job*|*application*|*hire*|*phd*|*academic*|*research*)
+                        BUSINESS="${BUSINESS:+$BUSINESS,}outreach-applications"
+                        ;;
+                    *)
+                        BUSINESS="${BUSINESS:+$BUSINESS,}outcome-framing"
+                        ;;
+                esac
+                SAW_ANY_REAL_OUTCOME="true"
+            fi
+            sel="$OTHER_OUTCOME_TEXT"
+            ;;
+    esac
+    [[ -n "$sel" ]] && SHIP_GOAL="${SHIP_GOAL:+$SHIP_GOAL; }$sel"
+done <<< "$OUTCOME_TOGGLE_RESULT"
+
+if [[ "$SAW_ANY_REAL_OUTCOME" != "true" ]]; then
+    BUSINESS="outcome-framing"
+    META=""
+    SHIP_GOAL=""
+fi
+BUSINESS="$(dedup_csv "$BUSINESS")"
+META="$(dedup_csv "$META")"
+
+if [[ "$CREATE_OUTCOME_SKILL" == "true" ]]; then
+    echo "    Comma-separated absolute paths to notes/docs to draw a new business/meta skill from."
+    ask "reference files" "" OUTCOME_REF_FILES
+    [[ -n "$OUTCOME_REF_FILES" ]] && stage_skill_draft "outcome" "$OUTCOME_REF_FILES"
+fi
 
 hr
 if [[ "${STANDALONE:-false}" != "true" ]]; then
@@ -397,29 +480,8 @@ fi
 # Domain skills come from explicit answer
 DOMAINS="$DOMAIN_INPUT"
 
-# Business + meta inferred from the ship goal + role (cheap heuristics).
-BUSINESS=""
-META=""
-goal_lower="$(echo "$SHIP_GOAL $ROLE" | tr '[:upper:]' '[:lower:]')"
-
-case "$goal_lower" in
-    *saas*|*product*|*launch*|*indie*)
-        BUSINESS="outcome-framing,digital-products"
-        META="monetize-or-opensource"
-        ;;
-    *consult*|*client*|*freelance*)
-        BUSINESS="client-services,outcome-framing,ai-consulting"
-        ;;
-    *content*|*blog*|*newsletter*|*audience*|*creator*)
-        BUSINESS="content-creation,seo-and-marketing,digital-products"
-        ;;
-    *job*|*application*|*hire*|*phd*|*academic*|*research*)
-        BUSINESS="outreach-applications"
-        ;;
-    *)
-        BUSINESS="outcome-framing"
-        ;;
-esac
+# Business + meta were already derived directly from the Q7 outcome toggle
+# selection above (BUSINESS, META, SHIP_GOAL are already set).
 
 # =========================================================
 # WRITE PERSONALIZED CLAUDE.md
