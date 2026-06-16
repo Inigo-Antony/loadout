@@ -17,10 +17,13 @@ heuristic.
 - Blank line + Enter confirms the current selection and returns.
 - Pure bash — no new dependency, no change to the `--standalone` zero-deps promise.
 
-**Domains/business/meta menus** each get one trailing toggle item:
-`+ create a new skill from reference files`. If checked:
-- Immediately prompt for comma-separated reference file paths, scoped to that category.
-- Copy the given files into `<target>/.claude/skill-drafts/<category>/`.
+**Domains menu** (the only menu where skills are picked by name) gets one trailing
+toggle item: `+ create a new skill from reference files`. **Business and meta skills
+are NOT given their own selection menu** — they stay derived from the outcome answer
+(Q8), as today; only the derivation mechanism changes (see below). If the
+domains-menu trailing item is checked:
+- Immediately prompt for comma-separated reference file paths, scoped to domains.
+- Copy the given files into `<target>/.claude/skill-drafts/domains/`.
 - Write/append a short note (printed in the final summary, and into
   `<target>/.claude/skill-drafts/README.md`) instructing the user to run
   `walkthrough-then-codify` on that folder in a live Claude Code session — bash cannot
@@ -30,14 +33,23 @@ heuristic.
 **Q8 (outcome) becomes a multi-select toggle_menu** with options:
 `ship/launch a SaaS or product`, `land consulting/freelance clients`,
 `grow content/audience`, `land a job or publish research`, `not sure yet`,
-`other (type your own)`.
-- Each checked option (except "not sure") contributes its mapped business/meta skills
-  (union across checked options) and a clause to `SHIP_GOAL`.
-- "other" prompts one line of free text, run through the existing keyword heuristic,
-  and appended to `SHIP_GOAL`.
+`other (type your own)`, and a trailing
+`+ create a new skill from reference files` item (same staging behavior as the
+domains menu, but copying into `<target>/.claude/skill-drafts/outcome/`).
+- Each checked outcome option (except "not sure") contributes its mapped
+  business/meta skills (union across checked options) and a clause to `SHIP_GOAL`.
+  This replaces the old keyword-`case` heuristic with a direct option→skill mapping
+  table (no more guessing from free text).
+- "other" prompts one line of free text, run through the existing keyword heuristic
+  (kept only as the fallback for this one option), and appended to `SHIP_GOAL`.
 - If "not sure" is the only thing checked: `SHIP_GOAL` stays empty (GOALS block
   stripped from CLAUDE.md as today), business defaults to `outcome-framing` only, no
   meta skill.
+
+**Adding business/meta skills later:** the wizard's final summary prints a reminder
+that `install.sh --custom --business <list> --meta <list> --no-claude-overwrite` can
+be re-run anytime to layer in more business/meta skills without touching domains or
+CLAUDE.md. No new flag needed — `--custom` already supports this today.
 
 **`install.sh --custom` is unchanged.** It remains the non-interactive, scriptable
 path with comma-separated `--domains/--business/--meta` flags exactly as today. The
