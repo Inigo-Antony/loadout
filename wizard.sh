@@ -362,38 +362,13 @@ pick_one "default language for code-heavy work?" DEFAULT_LANG \
     "polyglot — pick per task"
 
 hr
-say "Q6. (Optional) Paths to reference markdown files."
-echo "    Notes, blog posts, CV, prior CLAUDE.md, README of a past project —"
-echo "    anything that describes how you work or what you care about."
-echo "    I'll grep for identity/voice signals and surface them for your review."
-echo "    Comma-separated absolute paths.  Leave blank to skip."
-ask "reference files" "" REF_FILES
-
-# ---- Process reference files (optional) ----
-if [[ "$REUSE_EXISTING" == "true" ]]; then
-    REF_FILES="${REF_FILES:+$REF_FILES,}$EXISTING_CLAUDE.bak"
-fi
-if [[ -n "$REF_FILES" ]]; then
-    hr
-    say "Scanning reference files for signals (regex extraction — no LLM call)."
-    IFS=',' read -ra RF_ARR <<< "$REF_FILES"
-    for f in "${RF_ARR[@]}"; do
-        f="$(echo "$f" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
-        extract_signals "$f"
-    done
-    echo ""
-    echo "  Signals above are advisory.  Override anything you disagree with"
-    echo "  on the next prompt, or accept the defaults."
-fi
-
-hr
-say "Q7. Anything else Claude should know about how you work?"
+say "Q6. Anything else Claude should know about how you work?"
 echo "    Standing rules, pet peeves, file-naming conventions, MCP servers in use."
 echo "    End with '.' on its own line, or press enter to skip."
 ask_multiline "extra notes" EXTRA_NOTES
 
 hr
-say "Q8. Last, and most important: what OUTCOME are you driving toward?"
+say "Q7. Last, and most important: what OUTCOME are you driving toward?"
 echo "    Not the domain — the result. What ships in the next 90 days, and what"
 echo "    does success look like: revenue, users, a publication, a signed client,"
 echo "    a job offer? One sentence. This selects the business + meta skills and"
