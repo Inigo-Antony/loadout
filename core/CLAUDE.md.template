@@ -21,6 +21,10 @@ Defaults if unspecified: terse by default; expand only for plans and consequenti
 
 For engineering execution — spec, tests, implementation, code review — defer to the installed superpowers/GSD rhythm; do not re-plan it. Loadout governs: (1) my voice and conditional concision, (2) my token budget and skill-first discipline, (3) my reasoning defaults (first-principles, then systems-thinking, via the 5-step governing algorithm), (4) when to parallelize subagents vs. stay sequential, (5) grounding claims on canonical sources before asserting, (6) logging major changes for cold-session handoff, and (7) driving work from brainstorm to a shipped/monetized outcome. When a commodity layer already does a job well, invoke it — don't reimplement.
 
+## Execution budget
+
+{{EXECUTION_BUDGET_LINE}}
+
 ## Skill index
 
 Skills live in `.claude/skills/` and auto-discover by frontmatter; prefer loading a skill over inlining context. Minimal targeted edits to existing files; complete new files only on explicit ask. See `.claude/pitfalls.md` for anti-patterns. Invoke `profile-me` to deepen this profile.

@@ -5,7 +5,7 @@
 # Usage:
 #   ./wizard.sh <target-dir>
 #
-# Walks the user through ~7 questions, then writes a personalized CLAUDE.md
+# Walks the user through ~8 questions, then writes a personalized CLAUDE.md
 # and a curated skill set into <target-dir>/CLAUDE.md and <target-dir>/.claude/.
 #
 # Intended to be called from install.sh:
@@ -249,7 +249,7 @@ clear || true
 cat <<'EOF'
 ============================================================
   Loadout :: personalization wizard
-  ~5 minutes. ~7 questions. Editable output at the end.
+  ~5 minutes. ~8 questions. Editable output at the end.
 ============================================================
 
 I'll ask a handful of questions, then write a personalized
@@ -477,6 +477,28 @@ if [[ "${STANDALONE:-false}" != "true" ]]; then
     esac
 fi
 
+hr
+say "Q8. What's your usage budget?"
+echo "    Layer 1's full rigor (subagent-driven-development: a fresh agent per"
+echo "    task, plus a two-stage review) is excellent but expensive — each task"
+echo "    can mean 3+ separate agent calls. This sets how aggressively Claude"
+echo "    should reach for that, versus working inline with self-review."
+pick_one "execution budget?" BUDGET_TIER \
+    "light — Free or Pro plan, watch every token" \
+    "generous — Max, Team, or pay-as-you-go API" \
+    "not sure / mixed — balance rigor and cost by default"
+case "$BUDGET_TIER" in
+    light*)
+        EXECUTION_BUDGET_LINE="Light (Free/Pro plan, tight message budget) — default to inline execution with self-review; reserve subagent-driven-development and multi-stage review for tasks too large or risky for one context. Skip the second review stage on small, mechanical changes."
+        ;;
+    generous*)
+        EXECUTION_BUDGET_LINE="Generous (Max/Team plan, or pay-as-you-go API) — full subagent-driven-development rigor (implementer + spec review + quality review) is the default for any non-trivial task."
+        ;;
+    *)
+        EXECUTION_BUDGET_LINE="Balanced (not sure / mixed) — use subagent-driven-development for genuinely independent, multi-task plans; inline execution with self-review for single-file or small changes."
+        ;;
+esac
+
 # =========================================================
 # DERIVE SKILL SELECTION FROM ANSWERS
 # =========================================================
@@ -555,6 +577,7 @@ VOICE_LINE_S="$(sed_escape "$VOICE_STYLE_LINE $VOICE_REGISTER_LINE")"
 OS_LINE_S="$(sed_escape "$OS_LINE")"
 DEFAULT_LANG_S="$(sed_escape "$DEFAULT_LANG")"
 TOOLING_NOTES_S="$(sed_escape "$TOOLING_NOTES_INLINE")"
+EXECUTION_BUDGET_LINE_S="$(sed_escape "$EXECUTION_BUDGET_LINE")"
 
 # Plain placeholders.
 sed -i.tmp \
@@ -567,6 +590,7 @@ sed -i.tmp \
     -e "s|{{PRIMARY_OS}}|$OS_LINE_S|g" \
     -e "s|{{DEFAULT_LANGUAGE}}|$DEFAULT_LANG_S|g" \
     -e "s|{{TOOLING_NOTES}}|$TOOLING_NOTES_S|g" \
+    -e "s|{{EXECUTION_BUDGET_LINE}}|$EXECUTION_BUDGET_LINE_S|g" \
     "$TARGET/CLAUDE.md"
 rm -f "$TARGET/CLAUDE.md.tmp"
 
