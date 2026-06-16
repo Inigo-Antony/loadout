@@ -311,24 +311,30 @@ ask "role" "" ROLE
 
 hr
 say "Q3. What domain(s) do you work in?"
-AVAILABLE_DOMAINS="$(list_domains | tr '\n' ' ')"
-echo "    Comma-separated. Pick from these domain skills (not preset names):"
-echo "      $AVAILABLE_DOMAINS"
-# Validate against the actual files; re-prompt until every token is a real
-# domain skill. Catches preset names (e.g. academic-research) and typos.
-while true; do
-    ask "domains" "backend-saas,frontend" DOMAIN_INPUT
-    invalid=""
-    IFS=',' read -ra _DOM_CHECK <<< "$DOMAIN_INPUT"
-    for d in "${_DOM_CHECK[@]}"; do
-        d="$(trim "$d")"
-        [[ -z "$d" ]] && continue
-        [[ -f "$LIB/domains/${d}.md" ]] || invalid+=" $d"
-    done
-    [[ -z "$invalid" ]] && break
-    echo "  not a known domain skill:$invalid"
-    echo "  choose from: $AVAILABLE_DOMAINS"
-done
+DOMAIN_OPTS=()
+while IFS= read -r d; do
+    [[ -n "$d" ]] && DOMAIN_OPTS+=("$d")
+done < <(list_domains)
+NEW_SKILL_LABEL="+ create a new skill from reference files"
+toggle_menu "Toggle the domain skills to include:" DOMAIN_TOGGLE_RESULT \
+    "${DOMAIN_OPTS[@]}" "$NEW_SKILL_LABEL"
+
+DOMAIN_INPUT=""
+CREATE_DOMAIN_SKILL="false"
+while IFS= read -r sel; do
+    [[ -z "$sel" ]] && continue
+    if [[ "$sel" == "$NEW_SKILL_LABEL" ]]; then
+        CREATE_DOMAIN_SKILL="true"
+        continue
+    fi
+    DOMAIN_INPUT="${DOMAIN_INPUT:+$DOMAIN_INPUT,}$sel"
+done <<< "$DOMAIN_TOGGLE_RESULT"
+
+if [[ "$CREATE_DOMAIN_SKILL" == "true" ]]; then
+    echo "    Comma-separated absolute paths to notes/docs to draw a new domain skill from."
+    ask "reference files" "" DOMAIN_REF_FILES
+    [[ -n "$DOMAIN_REF_FILES" ]] && stage_skill_draft "domains" "$DOMAIN_REF_FILES"
+fi
 
 hr
 say "Q4. Voice preferences."
