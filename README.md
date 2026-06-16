@@ -57,6 +57,7 @@ loadout/
 │           ├── governing-algorithm.md   ← question → delete → simplify → accelerate → automate
 │           ├── orchestration-policy.md  ← parallel vs. sequential; execution via GSD
 │           ├── grounding-standard.md    ← ground claims before asserting
+│           ├── ship-readiness.md        ← pre-ship gate: security + claim-integrity, delegates to Layer 1
 │           ├── handoff-log.md           ← cold-session resume schema, rides on claude-mem
 │           ├── reasoning-education.md   ← state the governing principle on non-obvious decisions
 │           ├── token-discipline.md
@@ -150,7 +151,7 @@ The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed
 - `CLAUDE.md` — operator profile + Layer Contract (placeholders filled by wizard, or left for manual edit)
 - `.claude/pitfalls.md` — reference for designing/auditing skills
 - `.claude/skills/thinking/*.md` — first-principles, systems-thinking
-- `.claude/skills/operating/*.md` — the five governance policies, token-discipline, walkthrough-then-codify, recursive-refinement, profile-me
+- `.claude/skills/operating/*.md` — the six governance policies (incl. ship-readiness, the pre-ship security + claim-integrity gate), token-discipline, walkthrough-then-codify, recursive-refinement, profile-me
 - `.claude/skills/<domain>.md`, `<business>.md`, `<meta>.md` (+ `sub/*.md`) — the selected adapters and overlays
 
 ## The compounding loop
