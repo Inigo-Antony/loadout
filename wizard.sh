@@ -142,7 +142,7 @@ toggle_menu() {
 # dedup_csv <comma-separated-list>
 # Removes duplicate entries (order-preserving) from a comma-separated list.
 dedup_csv() {
-    echo "$1" | tr ',' '\n' | awk 'NF && !seen[$0]++' | paste -sd, -
+    echo "$1" | tr ',' '\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | awk 'NF && !seen[$0]++' | paste -sd, -
 }
 
 # ensure_skill_drafts_readme
@@ -173,12 +173,19 @@ stage_skill_draft() {
     mkdir -p "$dest"
     local -a ref_arr
     IFS=',' read -ra ref_arr <<< "$paths"
-    local p copied=0
+    local p copied=0 base destfile n
     for p in "${ref_arr[@]}"; do
         p="$(trim "$p")"
         [[ -z "$p" ]] && continue
         if [[ -f "$p" ]]; then
-            cp "$p" "$dest/"
+            base="$(basename "$p")"
+            destfile="$dest/$base"
+            n=2
+            while [[ -e "$destfile" ]]; do
+                destfile="$dest/${n}-${base}"
+                n=$((n + 1))
+            done
+            cp "$p" "$destfile"
             copied=$((copied + 1))
         else
             echo "    WARNING: not found, skipping: $p"
