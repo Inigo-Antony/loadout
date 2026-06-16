@@ -5,7 +5,7 @@
 # Usage:
 #   ./wizard.sh <target-dir>
 #
-# Walks the user through 5–8 questions, then writes a personalized CLAUDE.md
+# Walks the user through ~7 questions, then writes a personalized CLAUDE.md
 # and a curated skill set into <target-dir>/CLAUDE.md and <target-dir>/.claude/.
 #
 # Intended to be called from install.sh:
@@ -620,5 +620,13 @@ echo "  1. Open $TARGET in Claude Code."
 echo "  2. Review CLAUDE.md and tweak voice / tooling lines as needed."
 echo "  3. Run the in-Claude 'profile-me' skill to deepen the profile and"
 echo "     generate domain-specific skills from your real workflows."
+if [[ -d "$TARGET/.claude/skill-drafts" ]]; then
+    echo "  4. You staged reference files in .claude/skill-drafts/ — run the"
+    echo "     'walkthrough-then-codify' skill on them in a Claude Code session"
+    echo "     to turn them into real skills."
+fi
+echo ""
+echo "Add more business/meta skills later without re-running the wizard:"
+echo "  ./install.sh $TARGET --custom --business <list> --meta <list> --no-claude-overwrite"
 echo ""
 echo "Re-run safely: this wizard always backs up CLAUDE.md before writing."

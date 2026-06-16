@@ -100,7 +100,7 @@ By default every mode is **layered**: it provisions the Layer 1 plugins via the 
 ./install.sh ~/projects/myproject --wizard
 ```
 
-The wizard asks ~8 questions (name, role, domains, voice, tooling, reference markdown, extra notes — closing with the *outcome you're driving toward*, which selects the business/meta skills), then writes a fully personalized `CLAUDE.md` (profile + Layer Contract) plus a curated skill set, and offers the layered/standalone choice. Re-running is safe — existing files are backed up.
+The wizard asks ~7 questions (name, role, domains — toggle-checklist, not typed — voice, tooling, extra notes, and a multi-select *outcome you're driving toward* that selects the business/meta skills), then writes a fully personalized `CLAUDE.md` (profile + Layer Contract) plus a curated skill set, and offers the layered/standalone choice. Either toggle menu has a "+ create a new skill from reference files" option that stages your notes in `.claude/skill-drafts/` for a later `walkthrough-then-codify` pass. Re-running is safe — existing files are backed up.
 
 ### Option 2: Preset
 
