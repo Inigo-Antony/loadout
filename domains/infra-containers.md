@@ -82,5 +82,4 @@ Don't deploy monitoring stacks before the workload exists.
 
 ## See also
 
-- `domains/privacy-opsec.md` — for projects handling sensitive data
 - `domains/backend-saas.md` — for the application running in the containers

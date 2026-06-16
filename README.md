@@ -71,7 +71,6 @@ loadout/
 │   ├── frontend.md                  ← adapter → frontend-design plugin
 │   ├── backend-saas.md              ← adapter → superpowers/GSD + mattpocock/vercel skills
 │   ├── infra-containers.md          ← native (rootless Podman, SELinux, devcontainers)
-│   ├── privacy-opsec.md             ← native
 │   ├── engineering-simulation.md    ← native (power systems, microgrids, physical sims)
 │   └── report-generation.md         ← native (PDFs via Quarto / Typst / HTML+print)
 ├── business/                        ← operator judgment, cherry-pick per project
