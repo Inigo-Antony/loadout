@@ -276,7 +276,17 @@ if [[ -f "$EXISTING_CLAUDE" ]]; then
         "abort — I want to edit it by hand"
     case "$CHOICE" in
         back*)      cp "$EXISTING_CLAUDE" "$EXISTING_CLAUDE.bak"; info "backed up to CLAUDE.md.bak" ;;
-        treat*)     REUSE_EXISTING="true"; cp "$EXISTING_CLAUDE" "$EXISTING_CLAUDE.bak"; info "backed up to CLAUDE.md.bak" ;;
+        treat*)
+            REUSE_EXISTING="true"
+            cp "$EXISTING_CLAUDE" "$EXISTING_CLAUDE.bak"
+            info "backed up to CLAUDE.md.bak"
+            hr
+            say "Scanning your existing CLAUDE.md for signals (regex extraction -- no LLM call)."
+            extract_signals "$EXISTING_CLAUDE.bak"
+            echo ""
+            echo "  Signals above are advisory. Override anything you disagree with"
+            echo "  on the next prompts, or accept the defaults."
+            ;;
         abort*)     die "aborted by user" ;;
     esac
 fi
