@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-**Loadout** is a thin personal layer of Claude operating instructions that sits on top of the commodity engineering frameworks (superpowers, GSD, context-mode, claude-mem — "Layer 1"). It never rebuilds what Layer 1 does well; it owns voice, token discipline, reasoning policies, and the brainstorm→outcome arc. This repo is the master source; projects get Layer 1 provisioned plus a curated Layer 2 subset installed into their `.claude/` directory via `install.sh`. Nothing here runs as code — all content is Markdown skill files consumed by Claude sessions.
+**Loadout** is a thin personal layer of Claude operating instructions that sits on top of the commodity engineering frameworks (superpowers, GSD, context-mode, claude-mem — "Layer 1"). It never rebuilds what Layer 1 does well; it owns the parts that are irreducibly the operator's, each of which earns its place:
+
+- **Voice + reasoning defaults** — the operator profile and `thinking/` skills, so output starts as *them*, not generic.
+- **Governance (the cost/safety guardrails)** — most importantly an *execution-budget* directive that caps how eagerly Layer 1's expensive multi-agent patterns fire, plus `governing-algorithm`, `token-discipline`, `grounding-standard`, and the `ship-readiness` pre-ship gate. This is the load-bearing, measurable value: it keeps a one-line change from spawning a token-burning swarm and keeps unsafe/unsubstantiated work from shipping.
+- **Brainstorm→outcome arc** — outcome-framing → product-launch → monetize-or-opensource.
+
+It is a *customer* of the memory frameworks (claude-mem), not a competitor: it **declares** preferences up front in reviewable markdown rather than **learning** them over time, and `handoff-log` rides on claude-mem. This repo is the master source; projects get Layer 1 provisioned plus a curated Layer 2 subset installed into their `.claude/` directory via `install.sh`. Nothing here runs as code — all content is Markdown skill files consumed by Claude sessions.
 
 ## Installing into a project
 
