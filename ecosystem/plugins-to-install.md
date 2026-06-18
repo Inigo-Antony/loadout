@@ -8,13 +8,16 @@ Curated set of Claude Code plugins worth installing — this is Loadout's Layer 
 
 These pay back across every project. Install once with global scope; they auto-invoke when relevant.
 
+> **Marketplaces first.** A plugin lives in a *marketplace* (a git repo). `claude plugin install <name>@<marketplace>` fails with "not found in marketplace" unless that marketplace has been registered with `claude plugin marketplace add <owner/repo>`. Each block below does both steps. `install.sh` automates the whole set; these manual commands are for installing one plugin on its own. `marketplace add` is safe to re-run — it's a no-op if the marketplace is already present.
+
 ### 1. skill-creator (Anthropic official)
 
 **What it does:** Builds new skills from natural language. Describe the workflow; the plugin drafts, tests, iterates, and packages it. Removes the manual `SKILL.md` formatting work.
 
 **Install:**
 ```bash
-/plugin install skill-creator@anthropics
+claude plugin marketplace add anthropics/claude-plugins-official
+claude plugin install skill-creator@claude-plugins-official
 ```
 
 **When it triggers:** Any time you describe a workflow you want reusable. The plugin recognises the intent and offers to build the skill.
@@ -29,7 +32,8 @@ These pay back across every project. Install once with global scope; they auto-i
 
 **Install:**
 ```bash
-/plugin install superpowers@obra
+claude plugin marketplace add anthropics/claude-plugins-official
+claude plugin install superpowers@claude-plugins-official
 ```
 
 **When it triggers:** Any production code work. Most beneficial on features the client will actually run; less useful for one-off scripts.
@@ -44,7 +48,8 @@ These pay back across every project. Install once with global scope; they auto-i
 
 **Install:**
 ```bash
-claude plugin install context-mode
+claude plugin marketplace add mksglu/claude-context-mode
+claude plugin install context-mode@context-mode
 ```
 
 **When it triggers:** Any session that touches tool output (browser automation, log files, large API responses, web fetches). The plugin auto-installs an MCP server, hooks, and routing instructions.
@@ -61,7 +66,8 @@ Auto-generates and updates folder-level CLAUDE.md as you work.
 
 **Install:**
 ```bash
-/plugin install claude-mem@thedotmack
+claude plugin marketplace add thedotmack/claude-mem
+claude plugin install claude-mem@thedotmack
 ```
 
 **When it triggers:** Every new session — automatically pulls in relevant prior context. No manual invocation.
@@ -76,7 +82,8 @@ Auto-generates and updates folder-level CLAUDE.md as you work.
 
 **Install:**
 ```bash
-/plugin install gsd
+claude plugin marketplace add jnuyens/gsd-plugin
+claude plugin install gsd@gsd-plugin
 ```
 
 **When it triggers:** Multi-step tasks where one context would degrade. Type `/gsd-help` to see commands.
@@ -91,7 +98,8 @@ Auto-generates and updates folder-level CLAUDE.md as you work.
 
 **Install:**
 ```bash
-/plugin install frontend-design@anthropics
+claude plugin marketplace add anthropics/claude-plugins-official
+claude plugin install frontend-design@claude-plugins-official
 ```
 
 **When it triggers:** Any UI / web / component work.

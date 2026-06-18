@@ -164,13 +164,29 @@ if [[ "$STANDALONE" != "true" ]]; then
         echo "  Layer 2 still installs. To finish later: install Claude Code, then rerun,"
         echo "  or use --standalone to silence this warning."
     else
+        # Plugins live in marketplaces, which are just git repos. Register each
+        # marketplace before installing, or the install fails with
+        # "not found in marketplace". `add` is safe to re-run (no-op if present).
+        MARKETPLACES=(
+            "anthropics/claude-plugins-official"   # superpowers, skill-creator, frontend-design
+            "thedotmack/claude-mem"                # claude-mem
+            "mksglu/claude-context-mode"           # context-mode
+            "jnuyens/gsd-plugin"                   # gsd
+        )
+        for m in "${MARKETPLACES[@]}"; do
+            echo "  marketplace: $m"
+            claude plugin marketplace add "$m" || echo "    (already added or failed; continue)"
+        done
+
+        # plugin@marketplace identifiers (marketplace = the name declared in the
+        # repo's marketplace.json, not the repo path).
         PLUGINS=(
-            "superpowers@obra"
-            "gsd"
-            "context-mode"
+            "superpowers@claude-plugins-official"
+            "skill-creator@claude-plugins-official"
+            "frontend-design@claude-plugins-official"
             "claude-mem@thedotmack"
-            "skill-creator@anthropics"
-            "frontend-design@anthropics"
+            "context-mode@context-mode"
+            "gsd@gsd-plugin"
         )
         for p in "${PLUGINS[@]}"; do
             echo "  installing: $p"

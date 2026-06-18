@@ -380,12 +380,11 @@ OUTCOME_OPTS=(
     "other (type your own)"
 )
 toggle_menu "Toggle the outcomes that apply:" OUTCOME_TOGGLE_RESULT \
-    "${OUTCOME_OPTS[@]}" "$NEW_SKILL_LABEL"
+    "${OUTCOME_OPTS[@]}"
 
 BUSINESS=""
 META=""
 SHIP_GOAL=""
-CREATE_OUTCOME_SKILL="false"
 SAW_ANY_REAL_OUTCOME="false"
 OUTCOME_SELECTIONS=()
 while IFS= read -r sel; do
@@ -394,10 +393,6 @@ done <<< "$OUTCOME_TOGGLE_RESULT"
 
 for sel in "${OUTCOME_SELECTIONS[@]}"; do
     case "$sel" in
-        "$NEW_SKILL_LABEL")
-            CREATE_OUTCOME_SKILL="true"
-            continue
-            ;;
         "not sure yet")
             continue
             ;;
@@ -455,12 +450,6 @@ if [[ "$SAW_ANY_REAL_OUTCOME" != "true" ]]; then
 fi
 BUSINESS="$(dedup_csv "$BUSINESS")"
 META="$(dedup_csv "$META")"
-
-if [[ "$CREATE_OUTCOME_SKILL" == "true" ]]; then
-    echo "    Comma-separated absolute paths to notes/docs to draw a new business/meta skill from."
-    ask "reference files" "" OUTCOME_REF_FILES
-    [[ -n "$OUTCOME_REF_FILES" ]] && stage_skill_draft "outcome" "$OUTCOME_REF_FILES"
-fi
 
 hr
 if [[ "${STANDALONE:-false}" != "true" ]]; then
