@@ -19,3 +19,6 @@ MBSE_Datasheet_Arcadia.pdf
 # Claude Code session helper + local-only install artifacts
 resume-session
 .claude/
+
+# GSD / context-mode tooling state — local only, not part of the project
+.planning/
