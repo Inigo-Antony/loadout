@@ -1,7 +1,7 @@
-# Pro tier — private until the paid product launches; never commit publicly
+# Pro tier — private until the paid product launches
 pro/
 
-# Brainstorm / design records (keep local, don't ship in OSS)
+# Brainstorm / design records 
 .brainstorm/
 
 # OS / editor noise
@@ -13,11 +13,7 @@ pro/
 # Local-only test installs
 test-install/
 
-# Trial-run reference file — not part of the project
-MBSE_Datasheet_Arcadia.pdf
-
-# Claude Code session helper + local-only install artifacts
-resume-session
+# Local-only install artifacts
 .claude/
 
 # GSD / context-mode tooling state — local only, not part of the project
