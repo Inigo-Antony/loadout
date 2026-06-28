@@ -1,4 +1,6 @@
 # Loadout
+<img width="2816" height="1536" alt="loadout-image" src="https://github.com/user-attachments/assets/d49ea1c7-9d5a-4842-84c4-03b9d75336d8" />
+
 
 Every multiplayer game makes you pick a loadout before you spawn: weapons, perks, equipment. The map is the same for everyone. The ruleset is the same for everyone. The only part that's actually yours is what you choose to carry in.
 
