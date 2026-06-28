@@ -214,8 +214,6 @@ Distilled from:
 - **Ross Mak** — skills + progressive disclosure + walkthrough-then-codify methodology
 - **Nate Herk** — "I tried 100+ Claude Code skills, these 6 are the best" — plugin layer (skill-creator, superpowers, GSD, /review, context-mode, claude-mem, frontend-design) + outcome-selling principle
 - **Claude Code tricks** — 32 tactical mechanisms compendium
-- **First Principles Thinking** and **Systems Thinking for ESD** — cognitive foundations
-- **MarksInsights** — "How to make money with Claude AI" — 15 income paths and the trade-time-for-money critique
 - **ScriptByAI** — Ultimate Claude Code Resource List 2026 — broader ecosystem map
 - **everything-claude-code** (Affaan Mustafa) — structural conventions, MCP discipline rules
 
