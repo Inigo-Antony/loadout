@@ -224,3 +224,7 @@ Loadout grows by adapters, not by rewrites. If your domain or business workflow 
 Found a skill that misfired? Open an issue with the transcript. That's exactly the signal `recursive-refinement` is meant to act on, and it's useful even if you don't fix it yourself.
 
 Questions, disagreements, "this analogy doesn't land for me" — all welcome in the issues tab. This is a personal layer that got open-sourced; tell me where it's still too personal.
+
+## Author
+
+I am Inigo, a vibe-coder with a generalist skillset looking for solving problems while having some fun. I work on different projects that usually solves some problem for me and publish it if I feel its useful for others too. You can contact me on m.inigoantony@gmail.com. Let me know if this project is useful or would like to collaborate on a new project. 
