@@ -1,16 +1,17 @@
-FROM node:20
+FROM node:24-bookworm
 
 ARG TZ
 ENV TZ="$TZ"
 
 ARG CLAUDE_CODE_VERSION=latest
 
-# Install basic development tools and iptables/ipset
-# python3 + python3-pip added on top of upstream because several
-# Claude Code skills (file handling, superpowers, Anthropic skill
-# marketplace) call Python scripts. ~50MB; pays for itself the
-# first time a skill needs it.
+# Install Claude Code, plugin, and native-module prerequisites.
 RUN apt-get update && apt-get install -y --no-install-recommends \
+  bash \
+  ca-certificates \
+  curl \
+  build-essential \
+  python3 \
   less \
   git \
   procps \
@@ -29,13 +30,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   jq \
   nano \
   vim \
-  python3 \
-  python3-pip \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Ensure default node user has access to /usr/local/share
+# Install Bun system-wide so it is available to hooks and persists in the image.
+ARG BUN_VERSION=1.3.12
+ENV BUN_INSTALL=/usr/local/bun
+RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}" && \
+  chmod -R a+rX /usr/local/bun
+
+# Install uv system-wide for Claude-Mem semantic/vector search support.
+ARG UV_VERSION=0.11.7
+ENV UV_INSTALL_DIR=/usr/local/bin
+RUN curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh && \
+  chmod a+rX /usr/local/bin/uv /usr/local/bin/uvx
+
+# Ensure default node user has access to global package and runtime directories.
 RUN mkdir -p /usr/local/share/npm-global && \
-  chown -R node:node /usr/local/share
+  chown -R node:node /usr/local/share /usr/local/bun
 
 ARG USERNAME=node
 
@@ -49,8 +60,8 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 ENV DEVCONTAINER=true
 
 # Create workspace and config directories and set permissions
-RUN mkdir -p /workspace /home/node/.claude && \
-  chown -R node:node /workspace /home/node/.claude
+RUN mkdir -p /workspace /home/node/.claude /home/node/.claude-mem && \
+  chown -R node:node /workspace /home/node/.claude /home/node/.claude-mem
 
 WORKDIR /workspace
 
@@ -87,11 +98,11 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 # Install Claude
 RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
 
+
 # Copy and set up firewall script
 COPY init-firewall.sh /usr/local/bin/
 USER root
 RUN chmod +x /usr/local/bin/init-firewall.sh && \
   echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-firewall && \
   chmod 0440 /etc/sudoers.d/node-firewall
-
 USER node

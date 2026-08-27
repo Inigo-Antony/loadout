@@ -3,7 +3,7 @@
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
-      "TZ": "${localEnv:TZ:Etc/UTC}",
+      "TZ": "${localEnv:TZ:Asia/Kolkata}",
       "CLAUDE_CODE_VERSION": "latest",
       "GIT_DELTA_VERSION": "0.18.2",
       "ZSH_IN_DOCKER_VERSION": "1.2.0"
@@ -17,20 +17,24 @@
     "vscode": {
       "extensions": [
         "anthropic.claude-code",
+        "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "eamodio.gitlens",
-        "yzhang.markdown-all-in-one"
+        "eamodio.gitlens"
       ],
       "settings": {
         "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
         "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.profiles.linux": {
-          "zsh": {
-            "path": "zsh"
-          },
           "bash": {
             "path": "bash",
             "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "zsh"
           }
         }
       }
@@ -38,15 +42,18 @@
   },
   "remoteUser": "node",
   "mounts": [
-    "source=agent-resources-bashhistory,target=/commandhistory,type=volume",
-    "source=agent-resources-claude-config,target=/home/node/.claude,type=volume"
+    "source=loadout-${devcontainerId},target=/commandhistory,type=volume",
+    "source=loadout-config-${devcontainerId},target=/home/node/.claude,type=volume",
+    "source=loadout-memory-${devcontainerId},target=/home/node/.claude-mem,type=volume"
   ],
   "containerEnv": {
     "NODE_OPTIONS": "--max-old-space-size=4096",
     "CLAUDE_CONFIG_DIR": "/home/node/.claude",
+    "CLAUDE_MEM_DATA_DIR": "/home/node/.claude-mem",
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
   },
-  "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
-  "postCreateCommand": "sudo /usr/local/bin/init-firewall.sh || echo 'WARN: firewall setup skipped (host blocked NET_ADMIN/NET_RAW); continuing without network sandbox'"
+  "workspaceFolder": "/workspace",
+  "postStartCommand": "sudo /usr/local/bin/init-firewall.sh",
+  "waitFor": "postStartCommand"
 }
