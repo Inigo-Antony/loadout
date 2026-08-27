@@ -81,3 +81,7 @@ Freelance + Claude is more efficient hourly trade. Income still stops when you s
 ## 20. Not maintaining the library
 
 Skills go stale. APIs change, workflows evolve. A library untouched for six months has dead skills firing on tasks they no longer fit. When a skill misfires once, fix it. When it misfires twice, retire it.
+
+## 21. Committing straight to main, and `git commit` with no pathspec
+
+Two related traps. First: committing directly on `main` instead of branch → commit → merge → push. Second, sharper one: `git status` showing a pile of pre-existing staged files (someone else's in-progress work, an unrelated bulk change) is a signal to check `git diff --cached` before committing — a plain `git commit` with no pathspec commits the *entire index*, not just the files you just `git add`ed. Scope every commit explicitly: create a branch first, and pass the target files to `git commit -- <paths>` (or verify `git diff --cached --stat` matches intent) whenever the index might hold more than your own change.

@@ -13,6 +13,12 @@ Any outbound artifact: deploying to prod, opening a PR, cutting a release, publi
 
 Match depth to blast radius. A public production deploy or a published claim earns the full pass; a throwaway internal script does not. Don't apply release-grade rigor to a scratch file, and don't wave a public ship through on vibes.
 
+## Check 0 — Git workflow
+
+Default flow: branch → commit → merge → push. Never commit straight to `main` unless the user says otherwise. Before merging, confirm the branch fast-forwards or merges cleanly.
+
+When staging, `git status` may show files already staged that predate this task (another in-progress change, a bulk reformat). A bare `git commit` with no pathspec commits the *whole index*, not just what you touched — verify with `git diff --cached --stat` before committing, and commit with an explicit pathspec (`git commit -- <paths>`) whenever the index holds more than your own change. See `core/pitfalls.md` #21.
+
 ## Check 1 — Security
 
 Delegate the scan; own the decision to run it and the triage of what comes back.
