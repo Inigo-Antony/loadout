@@ -164,13 +164,26 @@ if [[ "$STANDALONE" != "true" ]]; then
         echo "  Layer 2 still installs. To finish later: install Claude Code, then rerun,"
         echo "  or use --standalone to silence this warning."
     else
+        # superpowers, skill-creator, frontend-design live in the default
+        # claude-plugins-official marketplace — no marketplace suffix needed.
+        # gsd, context-mode, claude-mem live in their own marketplace repos,
+        # which must be registered before `claude plugin install` can find them.
+        MARKETPLACES=(
+            "jnuyens/gsd-plugin"
+            "mksglu/context-mode"
+            "thedotmack/claude-mem"
+        )
+        for m in "${MARKETPLACES[@]}"; do
+            echo "  marketplace: $m"
+            claude plugin marketplace add "$m" || echo "    (failed; continue)"
+        done
         PLUGINS=(
-            "superpowers@obra"
-            "gsd"
-            "context-mode"
+            "superpowers"
+            "gsd@gsd-plugin"
+            "context-mode@context-mode"
             "claude-mem@thedotmack"
-            "skill-creator@anthropics"
-            "frontend-design@anthropics"
+            "skill-creator"
+            "frontend-design"
         )
         for p in "${PLUGINS[@]}"; do
             echo "  installing: $p"

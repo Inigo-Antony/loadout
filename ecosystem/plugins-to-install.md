@@ -14,8 +14,9 @@ These pay back across every project. Install once with global scope; they auto-i
 
 **Install:**
 ```bash
-/plugin install skill-creator@anthropics
+/plugin install skill-creator
 ```
+(ships in the default `claude-plugins-official` marketplace — no `@anthropics` marketplace exists, that suffix will fail)
 
 **When it triggers:** Any time you describe a workflow you want reusable. The plugin recognises the intent and offers to build the skill.
 
@@ -29,8 +30,9 @@ These pay back across every project. Install once with global scope; they auto-i
 
 **Install:**
 ```bash
-/plugin install superpowers@obra
+/plugin install superpowers
 ```
+(ships in the default `claude-plugins-official` marketplace — no `@obra` marketplace exists, that suffix will fail)
 
 **When it triggers:** Any production code work. Most beneficial on features the client will actually run; less useful for one-off scripts.
 
@@ -44,8 +46,10 @@ These pay back across every project. Install once with global scope; they auto-i
 
 **Install:**
 ```bash
-claude plugin install context-mode
+claude plugin marketplace add mksglu/context-mode
+claude plugin install context-mode@context-mode
 ```
+(the marketplace isn't pre-registered — add it first, or the bare `install context-mode` fails)
 
 **When it triggers:** Any session that touches tool output (browser automation, log files, large API responses, web fetches). The plugin auto-installs an MCP server, hooks, and routing instructions.
 
@@ -61,8 +65,10 @@ Auto-generates and updates folder-level CLAUDE.md as you work.
 
 **Install:**
 ```bash
+claude plugin marketplace add thedotmack/claude-mem
 /plugin install claude-mem@thedotmack
 ```
+(the marketplace isn't pre-registered — add it first)
 
 **When it triggers:** Every new session — automatically pulls in relevant prior context. No manual invocation.
 
@@ -76,8 +82,10 @@ Auto-generates and updates folder-level CLAUDE.md as you work.
 
 **Install:**
 ```bash
-/plugin install gsd
+claude plugin marketplace add jnuyens/gsd-plugin
+/plugin install gsd@gsd-plugin
 ```
+(the marketplace isn't pre-registered — add it first, or the bare `install gsd` fails)
 
 **When it triggers:** Multi-step tasks where one context would degrade. Type `/gsd-help` to see commands.
 
@@ -91,8 +99,9 @@ Auto-generates and updates folder-level CLAUDE.md as you work.
 
 **Install:**
 ```bash
-/plugin install frontend-design@anthropics
+/plugin install frontend-design
 ```
+(ships in the default `claude-plugins-official` marketplace — no `@anthropics` marketplace exists, that suffix will fail)
 
 **When it triggers:** Any UI / web / component work.
 
