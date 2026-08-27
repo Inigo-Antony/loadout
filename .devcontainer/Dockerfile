@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Bun system-wide so it is available to hooks and persists in the image.
 ARG BUN_VERSION=1.3.12
 ENV BUN_INSTALL=/usr/local/bun
+ENV PATH=$BUN_INSTALL/bin:$PATH
 RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}" && \
   chmod -R a+rX /usr/local/bun
 
