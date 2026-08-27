@@ -2,7 +2,7 @@
 
 ## Who I am
 
-{{NAME}}. {{ROLE}}{{#DOMAIN}} — {{DOMAIN}}{{/DOMAIN}}. {{BACKGROUND}}{{#GOALS}} Current focus: {{GOALS}}.{{/GOALS}}
+{{NAME}}. {{ROLE}}{{#DOMAIN}} — {{DOMAIN}}{{/DOMAIN}}.{{#GOALS}} Current focus: {{GOALS}}.{{/GOALS}}
 
 ## Voice
 
@@ -14,7 +14,6 @@ Defaults if unspecified: terse by default; expand only for plans and consequenti
 
 - Primary OS: {{PRIMARY_OS}}
 - Default language: {{DEFAULT_LANGUAGE}}
-- {{TOOLING_NOTES}}
 - All assets in markdown, version-controlled
 
 ## Layer contract

@@ -539,9 +539,6 @@ esac
 TEMPLATE="$LIB/core/CLAUDE.md.template"
 [[ -f "$TEMPLATE" ]] || die "core/CLAUDE.md.template not found at $LIB/core/ — incomplete checkout?"
 
-# Tooling notes: collapse the OS/lang answers into a single line, plus
-# any extras the user typed in Q7 (kept as-is below in its own section).
-TOOLING_NOTES_INLINE="Default language $DEFAULT_LANG on $OS_LINE."
 DOMAIN_DISPLAY="$(echo "$DOMAINS" | tr ',' ' ' | sed 's/[[:space:]]\+/, /g')"
 
 # mustache-style {{#FIELD}}…{{/FIELD}} blocks: keep the inner content only
@@ -576,7 +573,6 @@ SHIP_GOAL_S="$(sed_escape "$SHIP_GOAL")"
 VOICE_LINE_S="$(sed_escape "$VOICE_STYLE_LINE $VOICE_REGISTER_LINE")"
 OS_LINE_S="$(sed_escape "$OS_LINE")"
 DEFAULT_LANG_S="$(sed_escape "$DEFAULT_LANG")"
-TOOLING_NOTES_S="$(sed_escape "$TOOLING_NOTES_INLINE")"
 EXECUTION_BUDGET_LINE_S="$(sed_escape "$EXECUTION_BUDGET_LINE")"
 
 # Plain placeholders.
@@ -584,12 +580,10 @@ sed -i.tmp \
     -e "s|{{NAME}}|$NAME_S|g" \
     -e "s|{{ROLE}}|$ROLE_S|g" \
     -e "s|{{DOMAIN}}|$DOMAIN_DISPLAY_S|g" \
-    -e "s|{{BACKGROUND}}||g" \
     -e "s|{{GOALS}}|$SHIP_GOAL_S|g" \
     -e "s|{{VOICE_STYLE}}|$VOICE_LINE_S|g" \
     -e "s|{{PRIMARY_OS}}|$OS_LINE_S|g" \
     -e "s|{{DEFAULT_LANGUAGE}}|$DEFAULT_LANG_S|g" \
-    -e "s|{{TOOLING_NOTES}}|$TOOLING_NOTES_S|g" \
     -e "s|{{EXECUTION_BUDGET_LINE}}|$EXECUTION_BUDGET_LINE_S|g" \
     "$TARGET/CLAUDE.md"
 rm -f "$TARGET/CLAUDE.md.tmp"
