@@ -147,6 +147,10 @@ Comma-separated. Domains, business, meta are all optional individually.
 
 `--standalone` skips Layer 1 provisioning: no `claude` CLI needed, no plugins, no network — just bash copying markdown. The Layer Contract still lands in `CLAUDE.md`; install Layer 1 later and it simply starts being honored.
 
+### What not to commit
+
+If a project uses the filing-protocol skill (`core/skills/operating/filing-protocol.md`), `install.sh` writes `reference/**` and `log/**` into the project's `.gitignore` unconditionally — the scaffold is public, the fill is not. `reference/` holds supplied material you don't have redistribution rights to: papers, client briefs, unpublished drafts. `log/decisions.md` and `log/questions.md` can carry candid rationale (a rejected approach, a client's actual constraint) not meant for a public repo. Either stays local unless you deliberately remove the ignore rule. Work in `2-design/` or elsewhere that isn't ready to be public is an authorial decision, not a filing rule — nothing in the structure publishes it for you, but nothing un-publishes it once you have: prior disclosure isn't undone by a later deletion, in this repo or a fork of it.
+
 ### Optional: devcontainer
 
 The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed Linux environment (requires Docker + a devcontainer-aware tool). It is **not** required — `install.sh` and `wizard.sh` are pure bash and run anywhere.

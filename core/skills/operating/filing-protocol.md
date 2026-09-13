@@ -141,6 +141,9 @@ touch README.md CLAUDE.md log/decisions.md log/questions.md
 Create a folder only when it has something in it. An empty `4-test/` on a project that hasn't
 been built yet is noise — stages you never use don't get created.
 
+`reference/` and `log/` are gitignored by default (Loadout's `install.sh` writes this): the
+scaffold is public, the fill is not.
+
 ## Maintenance loop
 
 1. When something gets filed in the wrong stage, the stage `CLAUDE.md` was ambiguous — fix it,

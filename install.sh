@@ -190,6 +190,17 @@ cp "$LIB"/core/skills/thinking/*.md              "$TARGET/.claude/skills/thinkin
 cp "$LIB"/core/skills/operating/*.md             "$TARGET/.claude/skills/operating/"
 info "$(ls "$LIB"/core/skills/thinking/*.md | wc -l) thinking skills, $(ls "$LIB"/core/skills/operating/*.md | wc -l) operating skills"
 
+# ---- Privacy boundary: filing-protocol's reference/ and log/ stay local by
+# default (the scaffold is public, the fill is not). Written unconditionally
+# since the filing-protocol skill and CLAUDE.md.template block ship in every
+# install regardless of mode or wizard answer; idempotent on re-run.
+GITIGNORE="$TARGET/.gitignore"
+GITIGNORE_MARKER="# Loadout filing structure (reference/, log/) — local by default"
+if [[ ! -f "$GITIGNORE" ]] || ! grep -qF "$GITIGNORE_MARKER" "$GITIGNORE" 2>/dev/null; then
+    { [[ -s "$GITIGNORE" ]] && echo ""; echo "$GITIGNORE_MARKER"; echo "reference/**"; echo "log/**"; } >> "$GITIGNORE"
+    info ".gitignore: reference/**, log/** (supplied material and working logs stay local)"
+fi
+
 # ---- Copy domain skills ----
 if [[ -n "$DOMAINS" ]]; then
     echo "==> Copying domain skills: $DOMAINS"
