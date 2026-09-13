@@ -203,13 +203,16 @@ Don't download skills from strangers without reading them first — they're inst
 - **Code** (`install.sh`, `wizard.sh`): **Apache-2.0**. Patent grant explicit.
 - **Skill content** (all `.md` files in `core/`, `domains/`, `business/`, `meta/`): **CC-BY-4.0**. Attribution required.
 
-See `LICENSE`, `LICENSE-CONTENT`, and `TRADEMARK.md` for the full text.
+See `LICENSE` and `LICENSE-CONTENT` for the full text.
 
 ## Sources
 
-Distilled from:
+**Primary** — cited for any factual claim about Claude Code's own behavior:
 
-- **Anthropic** — official `anthropics/skills` repository, Claude Code documentation, agent teams release notes
+- **Anthropic** — official `anthropics/skills` repository, [Claude Code documentation](https://code.claude.com/docs), agent teams release notes
+
+**Secondary — community, unverified.** Cited for design inspiration, curation choices, and methodology, not for claims about how Claude Code behaves:
+
 - **Ross Mak** — skills + progressive disclosure + walkthrough-then-codify methodology
 - **Nate Herk** — "I tried 100+ Claude Code skills, these 6 are the best" — plugin layer (skill-creator, superpowers, GSD, /review, context-mode, claude-mem, frontend-design) + outcome-selling principle
 - **Claude Code tricks** — 32 tactical mechanisms compendium
