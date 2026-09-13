@@ -17,7 +17,7 @@ Match depth to blast radius. A public production deploy or a published claim ear
 
 Default flow: branch → commit → merge → push. Never commit straight to `main` unless the user says otherwise. Before merging, confirm the branch fast-forwards or merges cleanly.
 
-When staging, `git status` may show files already staged that predate this task (another in-progress change, a bulk reformat). A bare `git commit` with no pathspec commits the *whole index*, not just what you touched — verify with `git diff --cached --stat` before committing, and commit with an explicit pathspec (`git commit -- <paths>`) whenever the index holds more than your own change. See `core/pitfalls.md` #21.
+When staging, `git status` may show files already staged that predate this task (another in-progress change, a bulk reformat). A bare `git commit` with no pathspec commits the *whole index*, not just what you touched — verify with `git diff --cached --stat` before committing, and commit with an explicit pathspec (`git commit -- <paths>`) whenever the index holds more than your own change.
 
 ## Check 1 — Security
 

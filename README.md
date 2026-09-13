@@ -15,7 +15,7 @@ It isn't. **Loadout** is a thin personal layer that sits **on top of** those com
 - **A flat token fee, not a growing tax** — a small skill set, progressive disclosure (~50 tokens per skill always-on, the body free until matched), and governance that deletes before it adds. *Why it matters:* personalization costs the same whether a skill is shallow or deep, so the layer never becomes the thing slowing you down. (The one real cost to watch: every always-on description competes for the model's attention, so a *bloated* library raises misfire odds — which is exactly why curation is built in.)
 - **Brainstorm → outcome** — the arc from idea to shipped/monetized result: outcome-framing → product-launch → monetize-or-opensource. *Why it matters:* the engineering frameworks get you working code; this gets you to a result that actually counts.
 
-One thing it's deliberately **not**: a memory system. Memory *learns* your habits over time (emergent, per-account, hard to inspect); Loadout *declares* them up front, in plain markdown you can read, `git diff`, version, and reuse across projects or hand to a teammate. It's a *customer* of the memory frameworks, not a competitor — `handoff-log` rides directly on claude-mem, and the two compound.
+One thing it's deliberately **not**: a memory system. Claude Code now ships [native auto memory](https://code.claude.com/docs/en/memory) — Claude writes its own `user`/`feedback`/`project`/`reference` notes as it works, machine-local, learned emergently. Loadout *declares* the same kind of profile up front instead, in plain markdown you can read, `git diff`, version, and reuse across projects or hand to a teammate — a different tradeoff (reviewable, portable, but not self-updating), not a replacement. It's a *customer* of memory, not a competitor: `handoff-log` is a shape you can apply to a native auto-memory `project` note, a claude-mem entry if that plugin is installed, or a committed file — whichever storage the project already has.
 
 > What's your Claude loadout? Pick a preset, run the wizard, or compose your own.
 
@@ -33,10 +33,13 @@ LAYER 1 — COMMODITY ENGINEERING RHYTHM (adopt, never rebuild)
   superpowers    spec-first, TDD, subagent-driven development
   GSD            context engineering, subagent orchestration, quality gates
   context-mode   tool-output sandboxing (anti context-rot)
-  claude-mem     cross-session memory, auto folder-CLAUDE.md
+  claude-mem     session capture, cross-session search, knowledge agents —
+                 beyond what native auto memory's plain notes give you
   skill-creator, frontend-design  (Anthropic official)
 
-LAYER 0 — Claude Code + the Agent Skills spec
+LAYER 0 — Claude Code (native): auto memory (user/feedback/project/reference
+          notes), .claude/rules/*.md path-scoped rules, /doctor CLAUDE.md
+          trimming, the Agent Skills spec
 ```
 
 The rule that keeps it coherent: when Loadout and Layer 1 could overlap, Loadout yields. The generated `CLAUDE.md` carries a **Layer Contract** that tells Claude to defer engineering execution to Layer 1 and reserves Loadout for voice, token budget, reasoning policies, and the path to outcome.
@@ -48,7 +51,6 @@ loadout/
 ├── README.md
 ├── LICENSE                          ← Apache-2.0 (code)
 ├── LICENSE-CONTENT                  ← CC-BY-4.0 (skill .md files)
-├── TRADEMARK.md                     ← name + branding policy
 ├── install.sh                       ← layered install (Layer 1 + Layer 2); --standalone for copy-only
 ├── wizard.sh                        ← interactive personalization
 ├── core/
@@ -63,7 +65,7 @@ loadout/
 │           ├── orchestration-policy.md  ← parallel vs. sequential; execution via GSD
 │           ├── grounding-standard.md    ← ground claims before asserting
 │           ├── ship-readiness.md        ← pre-ship gate: security + claim-integrity, delegates to Layer 1
-│           ├── handoff-log.md           ← cold-session resume schema, rides on claude-mem
+│           ├── handoff-log.md           ← cold-session resume schema; storage is native auto memory, claude-mem, or a file
 │           ├── reasoning-education.md   ← state the governing principle on non-obvious decisions
 │           ├── token-discipline.md
 │           ├── walkthrough-then-codify.md  ← Elon step 5: automate last

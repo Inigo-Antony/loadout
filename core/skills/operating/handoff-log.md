@@ -5,7 +5,9 @@ description: On any major change or decision, write a structured log entry a col
 
 # Handoff Log
 
-A schema, not a memory system. Storage and retrieval are delegated to claude-mem (cross-session memory) and the repo itself (`docs/decisions/` or a `HANDOFF.md`, whichever the project already uses). This skill only fixes the *shape* of the entry, so a cold session can resume without re-deriving the state.
+A schema, not a memory system. Storage and retrieval are delegated to Claude Code's native auto memory (a `project` note), claude-mem (cross-session memory) if installed, or the repo itself (`docs/decisions/` or a `HANDOFF.md`, whichever the project already uses). This skill only fixes the *shape* of the entry, so a cold session can resume without re-deriving the state.
+
+Auto memory's four note types (`user`, `feedback`, `project`, `reference`) don't include this shape: none of them carries rejected alternatives, current unverified state, and a single next action in one place tied to a specific decision. Where this skill adds value over a plain auto memory note is exactly that — write a `project` note, but shape it with the five fields below.
 
 ## When to write one
 

@@ -26,4 +26,4 @@ For engineering execution — spec, tests, implementation, code review — defer
 
 ## Skill index
 
-Skills live in `.claude/skills/` and auto-discover by frontmatter; prefer loading a skill over inlining context. Minimal targeted edits to existing files; complete new files only on explicit ask. See `.claude/pitfalls.md` for anti-patterns. Invoke `profile-me` to deepen this profile.
+Skills live in `.claude/skills/` and auto-discover by frontmatter; prefer loading a skill over inlining context. Minimal targeted edits to existing files; complete new files only on explicit ask. Invoke `profile-me` to deepen this profile.
