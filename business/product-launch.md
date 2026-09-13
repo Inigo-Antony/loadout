@@ -133,7 +133,6 @@ Reuse the kit shape for every launch. Each subsequent launch gets faster.
 
 - `business/digital-products.md` — validation, build, pricing decisions that precede launch
 - `business/outcome-framing.md` — the page copy, the tagline, the recommendation framing
-- `business/seo-and-marketing.md` — sustained distribution after the launch spike fades
-- `business/content-creation.md` — the launch retro and ongoing channel
+- `business/marketing.md` — sustained distribution after the launch spike fades; the launch retro and ongoing channel
 - `domains/report-generation.md` — the launch one-pager and post-launch report
 - The installed planning rhythm (superpowers/GSD) — the launch is a plan-mode artefact in itself

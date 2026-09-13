@@ -92,7 +92,6 @@ If buyers consistently ask for customisation or implementation help, that's a se
 
 ## See also
 
-- `business/seo-and-marketing.md` — the 80% of the work
-- `business/content-creation.md` — the most-effective sustained marketing channel
+- `business/marketing.md` — the 80% of the work; the most-effective sustained channel
 - `business/outcome-framing.md` — for product copy and landing page
 - `meta/monetize-or-opensource.md` — for deciding if a project should become a product at all

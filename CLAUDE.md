@@ -28,9 +28,22 @@ It is a *customer* of the memory frameworks (claude-mem), not a competitor: it *
   --meta monetize-or-opensource
 ```
 
-Available presets: `academic-research`, `saas-launch`, `freelance-services`, `content-creator`, `job-pipeline`, `consultant`, `engineering`.
+Available presets: `academic-research`, `job-pipeline`, `engineering`. Everything else (`backend-saas`, `frontend`, `outcome-framing`, `client-services`, `ai-consulting`, `marketing`, `digital-products`, `product-launch`, `monetize-or-opensource`, …) is reachable via `--custom` or the wizard's dynamic domain toggle / outcome-driven business selection — presets are a maintenance-cost curation, not the only path to a skill.
 
-The default install is layered: Layer 1 plugins are provisioned via the `claude` CLI first, then Layer 2 is copied. `--standalone` skips Layer 1 — pure bash, zero external dependencies. Core (CLAUDE.md.template, pitfalls.md, thinking/, operating/) is always copied regardless of preset.
+The default install is layered: Layer 1 plugins are provisioned via the `claude` CLI first, then Layer 2 is copied. `--standalone` skips Layer 1 — pure bash, zero external dependencies. Core (CLAUDE.md.template, thinking/, operating/) is always copied regardless of preset; `pitfalls.md` stays in this repo for skill authors and is not copied into installed projects.
+
+## Testing changes to install.sh / wizard.sh
+
+There is no test suite — verify by syntax-checking and smoke-installing into the gitignored `test-install/` dir (also gitignored: `.claude/`, `*.bak`):
+
+```bash
+bash -n install.sh wizard.sh                                   # syntax check
+./install.sh test-install --preset engineering --standalone    # smoke test, no network/CLI deps
+./wizard.sh test-install                                       # exercise the interactive wizard directly
+rm -rf test-install
+```
+
+`.claude/` at the repo root is this repo's own dogfooded install (produced by one of the commands above) and is gitignored, not source — edit `core/`, `domains/`, `business/`, or `meta/` instead and regenerate it if you need to see install output.
 
 ## Skill file format
 

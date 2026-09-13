@@ -169,4 +169,4 @@ What doesn't work:
 - `meta/sub/open-sourcing.md` — for the open-core route or a parallel OSS layer
 - `business/digital-products.md` / `business/ai-consulting.md` / `business/automation-workflows.md` — specific monetisation forms
 - `business/outcome-framing.md` — for the pitch language and pricing framing
-- `business/seo-and-marketing.md` — for distribution
+- `business/marketing.md` — for distribution

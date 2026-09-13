@@ -105,5 +105,5 @@ Volume is rarely the answer. If you need volume, narrow your targeting until eac
 
 - `business/outcome-framing.md` — for sales-style outreach
 - `business/client-services.md` — for proposal stage after outreach gets a response
-- `business/content-creation.md` — outreach scales when content does the warming
+- `business/marketing.md` — outreach scales when content does the warming
 - `core/CLAUDE.md` — for voice rules across all written output

@@ -51,10 +51,10 @@ loadout/
 ├── TRADEMARK.md                     ← name + branding policy
 ├── install.sh                       ← layered install (Layer 1 + Layer 2); --standalone for copy-only
 ├── wizard.sh                        ← interactive personalization
-├── core/                            ← always copied to every project
-│   ├── CLAUDE.md.template           ← operator profile + Layer Contract, placeholders filled by wizard
-│   ├── pitfalls.md                  ← reference; not auto-loaded
-│   └── skills/
+├── core/
+│   ├── CLAUDE.md.template           ← operator profile + Layer Contract; always copied, placeholders filled by wizard
+│   ├── pitfalls.md                  ← reference for skill authors; stays in the repo, not copied to installed projects
+│   └── skills/                      ← always copied to every project
 │       ├── thinking/                ← cognitive foundations
 │       │   ├── first-principles.md
 │       │   └── systems-thinking.md
@@ -84,9 +84,8 @@ loadout/
 │   ├── client-services.md
 │   ├── digital-products.md
 │   ├── automation-workflows.md
-│   ├── content-creation.md          ← overlay → marketingskills
 │   ├── ai-consulting.md
-│   ├── seo-and-marketing.md         ← overlay → marketingskills
+│   ├── marketing.md                 ← overlay → marketingskills (content + distribution policy)
 │   ├── outreach-applications.md
 │   └── product-launch.md            ← pre-launch / launch-day / retro
 ├── meta/                            ← cross-cutting workflows
@@ -116,21 +115,19 @@ The wizard asks ~8 questions (name, role, domains — toggle-checklist, not type
 ### Option 2: Preset
 
 ```bash
-./install.sh ~/projects/myproject --preset saas-launch
+./install.sh ~/projects/myproject --preset engineering
 ./install.sh ~/projects/myproject --preset academic-research --standalone
 ```
 
 | Preset | Domains | Business | Meta |
 | --- | --- | --- | --- |
 | `academic-research` | scientific-python, academic-writing, data-analysis, report-generation | — | — |
-| `saas-launch` | backend-saas, frontend, infra-containers, report-generation | outcome-framing, product-launch | monetize-or-opensource |
-| `freelance-services` | — | client-services, outcome-framing, automation-workflows | — |
-| `content-creator` | — | content-creation, seo-and-marketing, digital-products, product-launch | — |
 | `job-pipeline` | scientific-python, infra-containers | outreach-applications, automation-workflows | — |
-| `consultant` | report-generation | ai-consulting, outcome-framing, client-services | — |
 | `engineering` | engineering-simulation, scientific-python, data-analysis, report-generation, infra-containers | — | — |
 
-Core (CLAUDE.md.template, pitfalls.md, thinking, operating) is always copied — every preset includes it. In preset mode, `CLAUDE.md` ships with placeholders unfilled — either edit by hand or re-run with `--wizard`.
+Three presets, curated for maintenance cost against zero assumed users — everything else (`backend-saas`, `frontend`, `outcome-framing`, `client-services`, `ai-consulting`, `marketing`, `digital-products`, `product-launch`, `monetize-or-opensource`, …) is still reachable via `--custom` below, or via the wizard's dynamic domain toggle and outcome-driven business selection, which don't go through presets at all.
+
+Core (CLAUDE.md.template, thinking, operating) is always copied — every preset includes it. `pitfalls.md` stays in the repo for skill authors; it is not copied into installed projects. In preset mode, `CLAUDE.md` ships with placeholders unfilled — either edit by hand or re-run with `--wizard`.
 
 ### Option 3: Custom
 
@@ -154,7 +151,6 @@ The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed
 ## What gets installed
 
 - `CLAUDE.md` — operator profile + Layer Contract (placeholders filled by wizard, or left for manual edit)
-- `.claude/pitfalls.md` — reference for designing/auditing skills
 - `.claude/skills/thinking/*.md` — first-principles, systems-thinking
 - `.claude/skills/operating/*.md` — the six governance policies (incl. ship-readiness, the pre-ship security + claim-integrity gate), token-discipline, walkthrough-then-codify, recursive-refinement, profile-me
 - `.claude/skills/<domain>.md`, `<business>.md`, `<meta>.md` (+ `sub/*.md`) — the selected adapters and overlays

@@ -19,15 +19,15 @@
 #
 # Presets:
 #   academic-research   scientific-python, academic-writing, data-analysis, report-generation
-#   saas-launch         backend-saas, frontend, infra-containers, outcome-framing,
-#                       product-launch, report-generation, monetize-or-opensource
-#   freelance-services  client-services, outcome-framing, automation-workflows
-#   content-creator     content-creation, seo-and-marketing, digital-products, product-launch
 #   job-pipeline        scientific-python, infra-containers, outreach-applications,
 #                       automation-workflows
-#   consultant          ai-consulting, outcome-framing, client-services, report-generation
 #   engineering         engineering-simulation, scientific-python, data-analysis,
 #                       report-generation, infra-containers
+#
+# Every domain/business/meta skill not listed above a preset is still reachable via
+# --custom, or via the wizard's dynamic domain toggle and outcome-driven business
+# selection (wizard.sh Q3/Q7) — presets are a maintenance-cost curation of the common
+# cases, not the only way to reach a skill.
 #
 # Custom flags accept comma-separated lists (no spaces). Examples:
 #   --domains backend-saas,frontend,infra-containers
@@ -62,8 +62,7 @@ claude-mem, skill-creator, frontend-design) via the claude CLI, then the
 Loadout personal layer on top. --standalone skips Layer 1 (pure bash, zero deps).
 
 Presets:
-  academic-research, saas-launch, freelance-services,
-  content-creator, job-pipeline, consultant, engineering
+  academic-research, job-pipeline, engineering
 
 Run with no arguments for this help.
 EOF
@@ -119,29 +118,9 @@ case "$PRESET" in
         BUSINESS=""
         META=""
         ;;
-    saas-launch)
-        DOMAINS="backend-saas,frontend,infra-containers,report-generation"
-        BUSINESS="outcome-framing,product-launch"
-        META="monetize-or-opensource"
-        ;;
-    freelance-services)
-        DOMAINS=""
-        BUSINESS="client-services,outcome-framing,automation-workflows"
-        META=""
-        ;;
-    content-creator)
-        DOMAINS=""
-        BUSINESS="content-creation,seo-and-marketing,digital-products,product-launch"
-        META=""
-        ;;
     job-pipeline)
         DOMAINS="scientific-python,infra-containers"
         BUSINESS="outreach-applications,automation-workflows"
-        META=""
-        ;;
-    consultant)
-        DOMAINS="report-generation"
-        BUSINESS="ai-consulting,outcome-framing,client-services"
         META=""
         ;;
     engineering)
@@ -150,7 +129,7 @@ case "$PRESET" in
         META=""
         ;;
     *)
-        [[ "$MODE" == "preset" ]] && die "unknown preset: $PRESET"
+        [[ "$MODE" == "preset" ]] && die "unknown preset: $PRESET (available: academic-research, job-pipeline, engineering — or use --custom)"
         ;;
 esac
 
@@ -206,11 +185,10 @@ if [[ "$NO_CLAUDE_OVERWRITE" != "true" ]]; then
         die "core/CLAUDE.md.template not found at $LIB/core/"
     fi
 fi
-cp "$LIB/core/pitfalls.md"                       "$TARGET/.claude/pitfalls.md"
 mkdir -p "$TARGET/.claude/skills/thinking" "$TARGET/.claude/skills/operating"
 cp "$LIB"/core/skills/thinking/*.md              "$TARGET/.claude/skills/thinking/"
 cp "$LIB"/core/skills/operating/*.md             "$TARGET/.claude/skills/operating/"
-info "pitfalls.md, $(ls "$LIB"/core/skills/thinking/*.md | wc -l) thinking skills, $(ls "$LIB"/core/skills/operating/*.md | wc -l) operating skills"
+info "$(ls "$LIB"/core/skills/thinking/*.md | wc -l) thinking skills, $(ls "$LIB"/core/skills/operating/*.md | wc -l) operating skills"
 
 # ---- Copy domain skills ----
 if [[ -n "$DOMAINS" ]]; then
@@ -272,4 +250,4 @@ if [[ "$NO_CLAUDE_OVERWRITE" != "true" ]]; then
     echo "  - CLAUDE.md was copied with placeholders unfilled. Either edit by hand"
     echo "    or rerun with --wizard for an interactive personalization."
 fi
-echo "  - Reference $TARGET/.claude/pitfalls.md when designing new skills"
+echo "  - Reference pitfalls.md in the loadout repo (core/pitfalls.md) when designing new skills"

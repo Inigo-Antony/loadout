@@ -149,5 +149,4 @@ For research-adjacent projects, citations themselves are a kind of "payment" in 
 
 - `meta/monetize-or-opensource.md` — the parent decision skill
 - `meta/sub/monetization.md` — for the open-core route
-- `business/seo-and-marketing.md` — distribution beyond the technical communities
-- `business/content-creation.md` — the announcement post and ongoing posts
+- `business/marketing.md` — distribution beyond the technical communities; the announcement post and ongoing posts

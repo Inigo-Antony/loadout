@@ -411,7 +411,7 @@ for sel in "${OUTCOME_SELECTIONS[@]}"; do
             SAW_ANY_REAL_OUTCOME="true"
             ;;
         "grow content/audience")
-            BUSINESS="${BUSINESS:+$BUSINESS,}content-creation,seo-and-marketing,digital-products"
+            BUSINESS="${BUSINESS:+$BUSINESS,}marketing,digital-products"
             SAW_ANY_REAL_OUTCOME="true"
             ;;
         "land a job or publish research")
@@ -431,7 +431,7 @@ for sel in "${OUTCOME_SELECTIONS[@]}"; do
                         BUSINESS="${BUSINESS:+$BUSINESS,}client-services,outcome-framing,ai-consulting"
                         ;;
                     *content*|*blog*|*newsletter*|*audience*|*creator*)
-                        BUSINESS="${BUSINESS:+$BUSINESS,}content-creation,seo-and-marketing,digital-products"
+                        BUSINESS="${BUSINESS:+$BUSINESS,}marketing,digital-products"
                         ;;
                     *job*|*application*|*hire*|*phd*|*academic*|*research*)
                         BUSINESS="${BUSINESS:+$BUSINESS,}outreach-applications"
