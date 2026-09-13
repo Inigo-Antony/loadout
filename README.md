@@ -196,6 +196,7 @@ The description costs ~50 tokens always-on; the body costs nothing until matched
 2. When a skill misfires repeatedly, retire it and re-author from `walkthrough-then-codify`.
 3. New repeatable workflow → walk it manually first, then codify (`walkthrough-then-codify`; the Anthropic skill-creator plugin does the packaging).
 4. When the ecosystem ships better tools, scan `ecosystem/external-skills.md`; if an external now beats a native domain skill, shrink the domain skill to an adapter.
+5. Find which skills go unused: enable the OpenTelemetry [logs exporter](https://code.claude.com/docs/en/monitoring-usage) and set `OTEL_LOG_TOOL_DETAILS=1` so skill names are recorded verbatim instead of redacted. The `skill_activated` event records every invocation in its `skill.name` attribute; `invocation_trigger` records whether a command, Claude, or a nested skill invoked it — together they show what to consolidate or retire. (Source: Claude Code docs, [Set up Claude Code in a monorepo or large codebase → Keep skills discoverable](https://code.claude.com/docs/en/large-codebases#keep-skills-discoverable).)
 
 Don't download skills from strangers without reading them first — they're instruction files; treat them like running someone's binary.
 
