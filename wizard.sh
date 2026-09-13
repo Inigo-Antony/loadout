@@ -499,6 +499,19 @@ case "$BUDGET_TIER" in
         ;;
 esac
 
+hr
+say "Q9. File this project by stage of fidelity (1-problem/2-design/3-validation/4-test)"
+echo "    instead of by file type? Recommended for hardware, simulation, or research"
+echo "    projects with a real problem->design->validation->test arc; skip it for a"
+echo "    typical app or script repo."
+pick_one "use the stage-based filing structure?" FILING_CHOICE \
+    "yes — all four stages (default)" \
+    "no — skip; the filing-protocol skill can set this up later on request"
+case "$FILING_CHOICE" in
+    yes*) FILING_ENABLED="true" ;;
+    *)    FILING_ENABLED="" ;;
+esac
+
 # =========================================================
 # DERIVE SKILL SELECTION FROM ANSWERS
 # =========================================================
@@ -557,6 +570,15 @@ cp "$TEMPLATE" "$TARGET/CLAUDE.md"
 # Optional blocks first (must run before plain substitution).
 keep_or_strip "DOMAIN" "$DOMAIN_DISPLAY" "$TARGET/CLAUDE.md"
 keep_or_strip "GOALS"  "$SHIP_GOAL"      "$TARGET/CLAUDE.md"
+
+# FILING spans multiple lines, unlike DOMAIN/GOALS — keep_or_strip's sed is
+# single-line-only (no `N`-loop), so it gets its own multiline-safe range delete.
+if [[ -n "$FILING_ENABLED" ]]; then
+    sed -i.tmp '/{{#FILING}}/d; /{{\/FILING}}/d' "$TARGET/CLAUDE.md"
+else
+    sed -i.tmp '/{{#FILING}}/,/{{\/FILING}}/d' "$TARGET/CLAUDE.md"
+fi
+rm -f "$TARGET/CLAUDE.md.tmp"
 
 # Escape sed-replacement special chars (|, \, &) in user input so values
 # like "Alice|Bob" or "C:\Users\..." don't break the substitution or

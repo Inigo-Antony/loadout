@@ -70,7 +70,8 @@ loadout/
 │           ├── token-discipline.md
 │           ├── walkthrough-then-codify.md  ← Elon step 5: automate last
 │           ├── recursive-refinement.md
-│           └── profile-me.md        ← the compounding engine
+│           ├── profile-me.md        ← the compounding engine
+│           └── filing-protocol.md   ← stage-based project layout (1-problem→2-design→3-validation→4-test)
 ├── domains/                         ← thin adapters where best-in-class externals exist;
 │   │                                  native only where none does
 │   ├── scientific-python.md         ← adapter → scientific-agent-skills + operator standards
@@ -112,7 +113,7 @@ By default every mode is **layered**: it provisions the Layer 1 plugins via the 
 ./install.sh ~/projects/myproject --wizard
 ```
 
-The wizard asks ~8 questions (name, role, domains — toggle-checklist, not typed — voice, tooling, extra notes, a multi-select *outcome you're driving toward* that selects the business/meta skills, and your *execution budget* — Free/Pro vs. Max/Team/API, which writes a directive constraining how often Layer 1's expensive multi-agent patterns get invoked), then writes a fully personalized `CLAUDE.md` (profile + Layer Contract) plus a curated skill set, and offers the layered/standalone choice. Either toggle menu has a "+ create a new skill from reference files" option that stages your notes in `.claude/skill-drafts/` for a later `walkthrough-then-codify` pass. Re-running is safe — existing files are backed up.
+The wizard asks ~9 questions (name, role, domains — toggle-checklist, not typed — voice, tooling, extra notes, a multi-select *outcome you're driving toward* that selects the business/meta skills, your *execution budget* — Free/Pro vs. Max/Team/API, which writes a directive constraining how often Layer 1's expensive multi-agent patterns get invoked, and whether this project wants the stage-based filing structure — `1-problem → 2-design → 3-validation → 4-test`, on by default), then writes a fully personalized `CLAUDE.md` (profile + Layer Contract) plus a curated skill set, and offers the layered/standalone choice. Either toggle menu has a "+ create a new skill from reference files" option that stages your notes in `.claude/skill-drafts/` for a later `walkthrough-then-codify` pass. Re-running is safe — existing files are backed up.
 
 ### Option 2: Preset
 
@@ -154,7 +155,7 @@ The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed
 
 - `CLAUDE.md` — operator profile + Layer Contract (placeholders filled by wizard, or left for manual edit)
 - `.claude/skills/thinking/*.md` — first-principles, systems-thinking
-- `.claude/skills/operating/*.md` — the six governance policies (incl. ship-readiness, the pre-ship security + claim-integrity gate), token-discipline, walkthrough-then-codify, recursive-refinement, profile-me
+- `.claude/skills/operating/*.md` — the six governance policies (incl. ship-readiness, the pre-ship security + claim-integrity gate), token-discipline, walkthrough-then-codify, recursive-refinement, profile-me, filing-protocol (stage-based project layout)
 - `.claude/skills/<domain>.md`, `<business>.md`, `<meta>.md` (+ `sub/*.md`) — the selected adapters and overlays
 
 ## The compounding loop

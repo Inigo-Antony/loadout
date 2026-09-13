@@ -27,3 +27,25 @@ For engineering execution — spec, tests, implementation, code review — defer
 ## Skill index
 
 Skills live in `.claude/skills/` and auto-discover by frontmatter; prefer loading a skill over inlining context. Minimal targeted edits to existing files; complete new files only on explicit ask. Invoke `profile-me` to deepen this profile.
+{{#FILING}}
+
+## Filing
+
+This project files by stage of fidelity, not by file type. Numbered directory = pipeline stage; unnumbered = cross-cutting. `1-problem` → `2-design` → `3-validation` → `4-test`, and iteration runs backward through the same folders — never a new `iteration-N/`.
+
+- `1-problem/` — requirements, constraints, targets. Not a design.
+- `2-design/` — the thing itself: CAD, models, code, logic.
+- `3-validation/` — does it work on paper: simulation, analysis, hand calculations.
+- `4-test/` — does it work in reality: rigs, trials, instrumented data.
+- `reference/` — supplied source material. Cite the filename inline before asserting a domain fact from it.
+- `log/decisions.md`, `log/questions.md` — one line per entry.
+
+Rules:
+
+1. File upstream when unsure between two stages — upstream is cheaper to correct.
+2. Most artefacts under a numbered directory are a **card**, not the real thing: a short file with `what:`, `from:`, `evidence:` (`guess`|`hand-calc`|`sim`|`test`|`measured`), `status:` (`draft`|`current`|`superseded`), `updated:`.
+3. When two cards disagree, stronger evidence wins; mark the weaker `status: superseded` and keep it. Nothing is deleted.
+4. Read `.claude/skills/operating/filing-protocol.md` before creating a directory or filing something that doesn't fit the six above.
+
+Uncited numbers are guesses. Say so rather than filling the gap.
+{{/FILING}}
