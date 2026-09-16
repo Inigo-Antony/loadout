@@ -76,7 +76,7 @@ core/                  → always installed; identity template, voice, tooling r
     operating/         → token-discipline, walkthrough-then-codify,
                          recursive-refinement, profile-me,
                          governing-algorithm, orchestration-policy,
-                         grounding-standard, handoff-log, reasoning-education,
+                         grounding-standard, handoff-log,
                          ship-readiness, filing-protocol
 domains/               → thin adapters where a best-in-class external exists
                          (scientific-python, frontend, backend-saas, …); native depth

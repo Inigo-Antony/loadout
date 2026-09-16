@@ -17,29 +17,13 @@ What does NOT belong in CLAUDE.md:
 - Long style guides — those are skills
 - Anything starting with "Always remember to…"
 
-## Tactical tools (Claude Code)
-
-| Command | Use when |
-| --- | --- |
-| `/init` | Starting a new or existing project — scaffolds a project memory file from the codebase |
-| `/context` | Diagnose token bloat. Shows percentages by source (system prompt, files, MCP tools, conversation). Run when a session feels sluggish. |
-| `/compact` | At ~60% utilisation. Compresses conversation history. Pass keep-instructions: `/compact but keep all API decisions and the data schema`. |
-| `/clear` | Switching to an unrelated task. Wipes conversation; CLAUDE.md and skills persist. |
-| `/resume` | Pick up a previous session by ID instead of re-explaining context. |
-| Status line (`/statusline`) | Persistent display of model, context %, cost. Critical for catching bloat before it bites. |
-| Plan mode (Shift+Tab) | Plan-only — Claude reads, researches, drafts steps, but writes nothing until you exit plan mode. |
-| `ultrathink` | Allocates ~32k thinking tokens before responding. Use for architecture decisions, hard debugging, refactors that touch multiple files. Don't waste it on simple edits. |
-
 ## MCP discipline
 
-MCP servers load their full tool definitions into context. Each enabled MCP costs hundreds to low-thousands of tokens *baseline*. The 200k window can shrink to ~70k usable with too many enabled.
+MCP servers load their full tool definitions into context. Each enabled MCP costs hundreds to low-thousands of tokens *baseline* — the window can shrink from 200k to ~70k usable with too many enabled.
 
-Rules of thumb (from ECC):
-- Configure many (20–30) MCPs globally, but **enable <10 per project**
-- Keep total active tools under ~80
-- Use `disabledMcpServers` in project config
+- Configure many globally, but **enable <10 per project**; keep total active tools under ~80. Use `disabledMcpServers` in project config.
 - For narrow needs (read one Notion DB, hit one API endpoint) — skip the MCP entirely and call the API directly. The MCP's value is breadth; if you need one function, breadth is a tax.
-- Context7 MCP is the exception worth almost-always-on for coding projects: it pulls live, version-specific library documentation and prevents the model from hallucinating deprecated APIs.
+- `context7` is the exception worth near-always-on for coding projects (it's in this stack's Layer 1 baseline already): it pulls live, version-specific library docs and prevents hallucinated deprecated APIs.
 
 ## Sub-agents save the parent's context
 

@@ -18,7 +18,7 @@ Major changes only: an architecture or dependency decision, a schema/API change,
 ```
 ## <date> — <one-line headline of what changed>
 - **Decision/change:** what was done, concretely.
-- **Why:** the governing reason in one or two lines (see `reasoning-education`).
+- **Why:** the governing reason in one or two lines (see `governing-algorithm`'s "naming the principle out loud").
 - **Rejected:** the alternative(s) not taken, and why — this is what cold sessions
   re-litigate when it's missing.
 - **State:** where things stand now — what works, what's broken, what's unverified.

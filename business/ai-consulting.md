@@ -27,14 +27,7 @@ Most discoveries reveal one of three patterns:
 - **The bottleneck** — one step that gates the rest of the process (review, approval, classification). Highest leverage; highest visibility.
 - **The unexplored opportunity** — "we could be doing X with AI but don't know how". Highest ambiguity; needs more discovery before scoping.
 
-For each, ask:
-- "How long does this currently take?"
-- "Who does it now?"
-- "What goes wrong, when it goes wrong?"
-- "What's the consequence of getting it wrong?"
-- "What would 'fixed' look like?"
-
-The answers determine whether this is a $5k job, a $30k job, or not a job (don't sell engagements that won't deliver value).
+For each, run `outcome-framing`'s discovery questions, plus one that's specific to consulting: "who does it now?" — the answer decides whether this is a training/enablement engagement or a straight build. The answers determine whether this is a $5k job, a $30k job, or not a job (don't sell engagements that won't deliver value).
 
 ## The engagement structure
 

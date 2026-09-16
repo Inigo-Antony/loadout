@@ -25,7 +25,7 @@ One thing it's deliberately **not**: a memory system. Claude Code now ships [nat
 LAYER 2 — LOADOUT (the only thing you maintain)
   voice + reasoning defaults     CLAUDE.md operator profile, thinking/ skills
   governance policies            governing-algorithm, orchestration-policy,
-                                 grounding-standard, handoff-log, reasoning-education
+                                 grounding-standard, handoff-log, ship-readiness
   outcome arc                    outcome-framing → product-launch → monetize-or-opensource
   compounding engine             profile-me + recursive-refinement + token-discipline
 
@@ -68,7 +68,6 @@ loadout/
 │           ├── grounding-standard.md    ← ground claims before asserting
 │           ├── ship-readiness.md        ← pre-ship gate: security + claim-integrity, delegates to Layer 1
 │           ├── handoff-log.md           ← cold-session resume schema; storage is native auto memory, claude-mem, or a file
-│           ├── reasoning-education.md   ← state the governing principle on non-obvious decisions
 │           ├── token-discipline.md
 │           ├── walkthrough-then-codify.md  ← Elon step 5: automate last
 │           ├── recursive-refinement.md
@@ -117,6 +116,8 @@ By default every mode is **layered**: it provisions the Layer 1 plugins via the 
 
 The wizard asks ~9 questions (name, role, domains — toggle-checklist, not typed — voice, tooling, extra notes, a multi-select *outcome you're driving toward* that selects the business/meta skills, your *execution budget* — Free/Pro vs. Max/Team/API, which writes a directive constraining how often Layer 1's expensive multi-agent patterns get invoked, and whether this project wants the stage-based filing structure — `1-problem → 2-design → 3-validation → 4-test`, on by default), then writes a fully personalized `CLAUDE.md` (profile + Layer Contract) plus a curated skill set, and offers the layered/standalone choice. Either toggle menu has a "+ create a new skill from reference files" option that stages your notes in `.claude/skill-drafts/` for a later `walkthrough-then-codify` pass. Re-running is safe — existing files are backed up.
 
+This is also the hand-off point between the generalist core and specialization: the wizard's domain, language, and outcome answers drive a **suggested-plugins** printout at the end — real, officially-listed Layer 1 plugins (`chrome-devtools-mcp` + `playwright` for a selected `frontend` domain, the matching per-language LSP, `vercel` for a "ship/launch a SaaS" outcome) named but never auto-installed. The generalist baseline (context7, semgrep, superpowers, GSD, context-mode, claude-mem, skill-creator, frontend-design) installs unconditionally because it helps on any project; specialist plugins get surfaced only when an answer actually calls for one, and installing them stays your call.
+
 ### Option 2: Preset
 
 ```bash
@@ -162,7 +163,7 @@ The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed
 - `CLAUDE.md` — operator profile + Layer Contract (placeholders filled by wizard, or left for manual edit)
 - `.claude/skills/<name>/SKILL.md`, one directory per skill — the format Claude Code actually discovers (verified against `code.claude.com/docs/en/skills`; a flat `<name>.md` is invisible to it). Category (`thinking/`, `operating/`, domain, business, meta) is a source-repo organizing convention only — every installed skill sits flat, sibling directories under `.claude/skills/`.
   - thinking: first-principles, systems-thinking
-  - operating: the six governance policies (incl. ship-readiness, the pre-ship security + claim-integrity gate), token-discipline, walkthrough-then-codify, recursive-refinement, profile-me, filing-protocol
+  - operating: the five governance policies (incl. ship-readiness, the pre-ship security + claim-integrity gate — `governing-algorithm` now also carries the "state the reason" rule that used to be its own file), token-discipline, walkthrough-then-codify, recursive-refinement, profile-me, filing-protocol
   - the selected domain/business/meta adapters and overlays, plus `monetization`/`open-sourcing` as their own sibling skills when `monetize-or-opensource` is selected
 
 ## The compounding loop

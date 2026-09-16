@@ -1,6 +1,6 @@
 ---
 name: governing-algorithm
-description: The default approach to any task or requirement — question, delete, simplify, accelerate, automate, in that order. Apply before designing, building, or optimising anything non-trivial.
+description: The default approach to any task or requirement — question, delete, simplify, accelerate, automate, in that order. Apply before designing, building, or optimising anything non-trivial, and to state the governing reason in one line on any non-obvious decision or rejection.
 ---
 
 # The Governing Algorithm
@@ -25,3 +25,7 @@ This skill is the *order of operations*, not the machinery. The machinery is del
 ## Applied to this library itself
 
 Every proposed skill, plugin, or process addition passes the same gate: who asked for it (1), can we not have it (2), can it be thinner (3)? Most additions die at step 2. That is the point.
+
+## Naming the principle out loud
+
+On a non-obvious call — choosing A over B, rejecting an option, accepting a cost — state which of the five steps drove it, in one line, in the moment: *"SQLite over Postgres here — single-writer local tool, step 2 says don't add an operational surface it doesn't need."* This is what lets a reviewer (or a future session) see which principle was governing instead of reverse-engineering it from the diff. Only non-obvious calls — annotating the obvious trains the reader to skip annotations. If the reasoning needs more than one line, it's a `handoff-log` entry, not a comment.

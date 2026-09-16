@@ -387,6 +387,7 @@ META=""
 SHIP_GOAL=""
 CREATE_OUTCOME_SKILL="false"
 SAW_ANY_REAL_OUTCOME="false"
+SAW_SAAS_OUTCOME="false"
 OUTCOME_SELECTIONS=()
 while IFS= read -r sel; do
     [[ -n "$sel" ]] && OUTCOME_SELECTIONS+=("$sel")
@@ -402,12 +403,13 @@ for sel in "${OUTCOME_SELECTIONS[@]}"; do
             continue
             ;;
         "ship/launch a SaaS or product")
-            BUSINESS="${BUSINESS:+$BUSINESS,}outcome-framing,digital-products"
+            BUSINESS="${BUSINESS:+$BUSINESS,}outcome-framing,digital-products,product-launch"
             META="${META:+$META,}monetize-or-opensource"
             SAW_ANY_REAL_OUTCOME="true"
+            SAW_SAAS_OUTCOME="true"
             ;;
         "land consulting/freelance clients")
-            BUSINESS="${BUSINESS:+$BUSINESS,}client-services,outcome-framing,ai-consulting"
+            BUSINESS="${BUSINESS:+$BUSINESS,}client-services,outcome-framing,ai-consulting,automation-workflows"
             SAW_ANY_REAL_OUTCOME="true"
             ;;
         "grow content/audience")
@@ -424,11 +426,12 @@ for sel in "${OUTCOME_SELECTIONS[@]}"; do
                 other_lower="$(echo "$OTHER_OUTCOME_TEXT" | tr '[:upper:]' '[:lower:]')"
                 case "$other_lower" in
                     *saas*|*product*|*launch*|*indie*)
-                        BUSINESS="${BUSINESS:+$BUSINESS,}outcome-framing,digital-products"
+                        BUSINESS="${BUSINESS:+$BUSINESS,}outcome-framing,digital-products,product-launch"
                         META="${META:+$META,}monetize-or-opensource"
+                        SAW_SAAS_OUTCOME="true"
                         ;;
                     *consult*|*client*|*freelance*)
-                        BUSINESS="${BUSINESS:+$BUSINESS,}client-services,outcome-framing,ai-consulting"
+                        BUSINESS="${BUSINESS:+$BUSINESS,}client-services,outcome-framing,ai-consulting,automation-workflows"
                         ;;
                     *content*|*blog*|*newsletter*|*audience*|*creator*)
                         BUSINESS="${BUSINESS:+$BUSINESS,}marketing,digital-products"
@@ -511,6 +514,38 @@ case "$FILING_CHOICE" in
     yes*) FILING_ENABLED="true" ;;
     *)    FILING_ENABLED="" ;;
 esac
+
+# =========================================================
+# SUGGEST SITUATIONAL PLUGINS (from Q3 domains + Q5 language + Q7 outcome)
+# =========================================================
+#
+# Layer 1's baseline (context7, semgrep, superpowers, GSD, context-mode,
+# claude-mem, skill-creator, frontend-design) installs unconditionally —
+# generalist, applies to any project. Everything below is specialist:
+# real, officially-listed plugins (see ecosystem/plugins-to-install.md's
+# "Situational" tier) that only pay off for a specific stack. This is the
+# actual hand-off point Loadout promises: generalist core always installed,
+# specialist plugins surfaced the moment the wizard sees a domain or outcome
+# that calls for one — never auto-installed, always your call.
+SUGGESTED_PLUGINS=()
+
+case ",$DOMAIN_INPUT," in
+    *,frontend,*)
+        SUGGESTED_PLUGINS+=("chrome-devtools-mcp@chrome-devtools-plugins  # verify what frontend-design ships, in a real browser")
+        SUGGESTED_PLUGINS+=("playwright  # E2E regression coverage for the same UI work")
+        ;;
+esac
+
+case "$DEFAULT_LANG" in
+    Python*)              SUGGESTED_PLUGINS+=("pyright-lsp  # real go-to-definition/diagnostics for Python") ;;
+    "TypeScript"*)        SUGGESTED_PLUGINS+=("typescript-lsp  # real go-to-definition/diagnostics for TS/JS") ;;
+    Go*)                  SUGGESTED_PLUGINS+=("gopls-lsp  # real go-to-definition/diagnostics for Go") ;;
+    Rust*)                SUGGESTED_PLUGINS+=("rust-analyzer-lsp  # real go-to-definition/diagnostics for Rust") ;;
+    polyglot*)            SUGGESTED_PLUGINS+=("<lang>-lsp  # pick per language from the Anthropic LSP pack — see ecosystem/plugins-to-install.md") ;;
+esac
+
+[[ "$SAW_SAAS_OUTCOME" == "true" ]] && \
+    SUGGESTED_PLUGINS+=("vercel  # deploy logs, previews, rollback — if you're hosting there")
 
 # =========================================================
 # DERIVE SKILL SELECTION FROM ANSWERS
@@ -669,4 +704,14 @@ echo ""
 echo "Add more business/meta skills later without re-running the wizard:"
 echo "  ./install.sh $TARGET --custom --business <list> --meta <list> --no-claude-overwrite"
 echo ""
+if (( ${#SUGGESTED_PLUGINS[@]} > 0 )); then
+    hr
+    echo "Suggested Layer 1 plugins for what you just selected (not installed —"
+    echo "each is real and officially listed; install what you'll actually use):"
+    for s in "${SUGGESTED_PLUGINS[@]}"; do
+        echo "  /plugin install $s"
+    done
+    echo "  See ecosystem/plugins-to-install.md's Situational tier for the rest."
+    echo ""
+fi
 echo "Re-run safely: this wizard always backs up CLAUDE.md before writing."
