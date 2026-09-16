@@ -40,10 +40,13 @@ There is no test suite — verify by syntax-checking and smoke-installing into t
 bash -n install.sh wizard.sh                                   # syntax check
 ./install.sh test-install --preset engineering --standalone    # smoke test, no network/CLI deps
 ./wizard.sh test-install                                       # exercise the interactive wizard directly
+find test-install/.claude/skills -maxdepth 2                   # verify: every entry is <name>/SKILL.md, never flat
 rm -rf test-install
 ```
 
-`.claude/` at the repo root is this repo's own dogfooded install (produced by one of the commands above) and is gitignored, not source — edit `core/`, `domains/`, `business/`, or `meta/` instead and regenerate it if you need to see install output.
+The `find` check above exists because the layout bug is silent otherwise: a flat `<name>.md` or a nested category folder copies without error, installs without error, and simply never gets discovered — Claude Code has no complaint to surface. `exit=0` and a file existing on disk are not evidence a skill is reachable; check the actual path shape.
+
+`.claude/` at the repo root is this repo's own dogfooded install (produced by one of the commands above) and is gitignored, not source — edit `core/`, `domains/`, `business/`, or `meta/` instead and regenerate it if you need to see install output. Regenerating it targets the repo root as `$TARGET`, so `install.sh`'s privacy-boundary step also appends `reference/**`/`log/**` to *this* `.gitignore` (Loadout doesn't use the filing-protocol convention on itself) — `git checkout -- .gitignore` after, or diff it before committing anything else.
 
 ## Skill file format
 
@@ -59,6 +62,8 @@ description: One sentence on when to invoke. ~50 tokens always-on.
 ```
 
 The description is the always-on cost (~50 tokens). The body costs nothing until matched. Keep descriptions tight and trigger-specific.
+
+Source files stay flat `<name>.md` for this repo's own maintenance — `install_skill()` in `install.sh` is what turns each one into the `.claude/skills/<name>/SKILL.md` layout Claude Code actually discovers (a flat file or a nested category folder under `skills/` is invisible to it; verified against `code.claude.com/docs/en/skills`). The category directories (`domains/`, `business/`, `meta/sub/`, `core/skills/{thinking,operating}/`) are source-repo organization only — every installed skill ends up a flat sibling directory. If you add a new skill file anywhere in this repo, it needs no special handling to be discovered once installed; if you ever hand-copy a skill into a project instead of using `install.sh`, remember to nest it as `<name>/SKILL.md`, not drop it in flat.
 
 ## Architecture
 

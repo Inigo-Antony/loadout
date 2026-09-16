@@ -49,6 +49,21 @@ info() { echo "  $*"; }
 # trim leading/trailing whitespace (comma-separated lists may be entered as "a, b, c")
 trim() { local s="$1"; s="${s#"${s%%[![:space:]]*}"}"; printf '%s' "${s%"${s##*[![:space:]]}"}"; }
 
+# install_skill <source-md-file> <target-skills-root>
+# Claude Code only discovers skills at .claude/skills/<skill-name>/SKILL.md —
+# a directory per skill, file literally named SKILL.md (verified against
+# code.claude.com/docs/en/skills). A flat <name>.md directly under skills/,
+# or nested one level under a category folder, is never scanned. The skill's
+# directory name comes from the source file's own basename (which always
+# matches its `name:` frontmatter by this repo's own skill-file-format rule),
+# not from any category folder the source happens to live in on disk.
+install_skill() {
+    local src="$1" skills_root="$2" name
+    name="$(basename "$src" .md)"
+    mkdir -p "$skills_root/$name"
+    cp "$src" "$skills_root/$name/SKILL.md"
+}
+
 usage() {
     cat <<'EOF'
 Usage:
@@ -185,10 +200,16 @@ if [[ "$NO_CLAUDE_OVERWRITE" != "true" ]]; then
         die "core/CLAUDE.md.template not found at $LIB/core/"
     fi
 fi
-mkdir -p "$TARGET/.claude/skills/thinking" "$TARGET/.claude/skills/operating"
-cp "$LIB"/core/skills/thinking/*.md              "$TARGET/.claude/skills/thinking/"
-cp "$LIB"/core/skills/operating/*.md             "$TARGET/.claude/skills/operating/"
-info "$(ls "$LIB"/core/skills/thinking/*.md | wc -l) thinking skills, $(ls "$LIB"/core/skills/operating/*.md | wc -l) operating skills"
+SKILLS_ROOT="$TARGET/.claude/skills"
+mkdir -p "$SKILLS_ROOT"
+n_thinking=0 n_operating=0
+for f in "$LIB"/core/skills/thinking/*.md; do
+    install_skill "$f" "$SKILLS_ROOT"; n_thinking=$((n_thinking + 1))
+done
+for f in "$LIB"/core/skills/operating/*.md; do
+    install_skill "$f" "$SKILLS_ROOT"; n_operating=$((n_operating + 1))
+done
+info "$n_thinking thinking skills, $n_operating operating skills"
 
 # ---- Privacy boundary: filing-protocol's reference/ and log/ stay local by
 # default (the scaffold is public, the fill is not). Written unconditionally
@@ -209,8 +230,8 @@ if [[ -n "$DOMAINS" ]]; then
         d="$(trim "$d")"
         src="$LIB/domains/${d}.md"
         [[ ! -f "$src" ]] && die "domain skill not found: $d"
-        cp "$src" "$TARGET/.claude/skills/${d}.md"
-        info "$d.md"
+        install_skill "$src" "$SKILLS_ROOT"
+        info "$d/SKILL.md"
     done
 fi
 
@@ -222,8 +243,8 @@ if [[ -n "$BUSINESS" ]]; then
         b="$(trim "$b")"
         src="$LIB/business/${b}.md"
         [[ ! -f "$src" ]] && die "business skill not found: $b"
-        cp "$src" "$TARGET/.claude/skills/${b}.md"
-        info "$b.md"
+        install_skill "$src" "$SKILLS_ROOT"
+        info "$b/SKILL.md"
     done
 fi
 
@@ -235,14 +256,17 @@ if [[ -n "$META" ]]; then
         m="$(trim "$m")"
         src="$LIB/meta/${m}.md"
         [[ ! -f "$src" ]] && die "meta skill not found: $m"
-        cp "$src" "$TARGET/.claude/skills/${m}.md"
-        info "$m.md"
+        install_skill "$src" "$SKILLS_ROOT"
+        info "$m/SKILL.md"
 
-        # If parent meta-skill, also bring in subs
+        # If parent meta-skill, also bring in subs — each as its own sibling
+        # skill directory (Claude Code doesn't support a nested "sub/" grouping
+        # under skills/), named from the sub-file's own `name:` frontmatter.
         if [[ "$m" == "monetize-or-opensource" ]]; then
-            mkdir -p "$TARGET/.claude/skills/sub"
-            cp "$LIB"/meta/sub/*.md "$TARGET/.claude/skills/sub/"
-            info "sub/open-sourcing.md, sub/monetization.md"
+            for f in "$LIB"/meta/sub/*.md; do
+                install_skill "$f" "$SKILLS_ROOT"
+                info "$(basename "$f" .md)/SKILL.md"
+            done
         fi
     done
 fi

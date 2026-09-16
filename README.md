@@ -158,9 +158,10 @@ The repo ships a `.devcontainer/` for running Claude Code in a network-sandboxed
 ## What gets installed
 
 - `CLAUDE.md` — operator profile + Layer Contract (placeholders filled by wizard, or left for manual edit)
-- `.claude/skills/thinking/*.md` — first-principles, systems-thinking
-- `.claude/skills/operating/*.md` — the six governance policies (incl. ship-readiness, the pre-ship security + claim-integrity gate), token-discipline, walkthrough-then-codify, recursive-refinement, profile-me, filing-protocol (stage-based project layout)
-- `.claude/skills/<domain>.md`, `<business>.md`, `<meta>.md` (+ `sub/*.md`) — the selected adapters and overlays
+- `.claude/skills/<name>/SKILL.md`, one directory per skill — the format Claude Code actually discovers (verified against `code.claude.com/docs/en/skills`; a flat `<name>.md` is invisible to it). Category (`thinking/`, `operating/`, domain, business, meta) is a source-repo organizing convention only — every installed skill sits flat, sibling directories under `.claude/skills/`.
+  - thinking: first-principles, systems-thinking
+  - operating: the six governance policies (incl. ship-readiness, the pre-ship security + claim-integrity gate), token-discipline, walkthrough-then-codify, recursive-refinement, profile-me, filing-protocol
+  - the selected domain/business/meta adapters and overlays, plus `monetization`/`open-sourcing` as their own sibling skills when `monetize-or-opensource` is selected
 
 ## The compounding loop
 

@@ -45,7 +45,7 @@ Rules:
 1. File upstream when unsure between two stages — upstream is cheaper to correct.
 2. Most artefacts under a numbered directory are a **card**, not the real thing: a short file with `what:`, `from:`, `evidence:` (`guess`|`hand-calc`|`sim`|`test`|`measured`), `status:` (`draft`|`current`|`superseded`), `updated:`.
 3. When two cards disagree, stronger evidence wins; mark the weaker `status: superseded` and keep it. Nothing is deleted.
-4. Read `.claude/skills/operating/filing-protocol.md` before creating a directory or filing something that doesn't fit the six above.
+4. Read the `filing-protocol` skill before creating a directory or filing something that doesn't fit the six above.
 
 Uncited numbers are guesses. Say so rather than filling the gap.
 {{/FILING}}
