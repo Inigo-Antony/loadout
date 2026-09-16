@@ -36,6 +36,8 @@ LAYER 1 — COMMODITY ENGINEERING RHYTHM (adopt, never rebuild)
   claude-mem     session capture, cross-session search, knowledge agents —
                  beyond what native auto memory's plain notes give you
   skill-creator, frontend-design  (Anthropic official)
+  context7       live, version-pinned docs — cuts library-API hallucination
+  semgrep        deterministic SAST/SCA/secrets scan on every file edit
 
 LAYER 0 — Claude Code (native): auto memory (user/feedback/project/reference
           notes), .claude/rules/*.md path-scoped rules, /doctor CLAUDE.md

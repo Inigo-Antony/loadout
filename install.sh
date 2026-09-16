@@ -4,7 +4,8 @@
 # frameworks) + Layer 2 (the personal layer from this repo).
 #
 # By default the install is LAYERED: it provisions the Layer 1 plugins
-# (superpowers, GSD, context-mode, claude-mem, skill-creator, frontend-design)
+# (superpowers, GSD, context-mode, claude-mem, skill-creator, frontend-design,
+# context7, semgrep)
 # via the `claude` CLI, then copies the Layer 2 skills and the operator
 # profile (with its Layer Contract). Pass --standalone to skip Layer 1
 # entirely — pure bash, zero external dependencies.
@@ -73,8 +74,9 @@ Usage:
   ./install.sh <target-dir> --custom [--domains <list>] [--business <list>] [--meta <list>] [--standalone]
 
 Default install is layered: Layer 1 plugins (superpowers, GSD, context-mode,
-claude-mem, skill-creator, frontend-design) via the claude CLI, then the
-Loadout personal layer on top. --standalone skips Layer 1 (pure bash, zero deps).
+claude-mem, skill-creator, frontend-design, context7, semgrep) via the claude
+CLI, then the Loadout personal layer on top. --standalone skips Layer 1 (pure
+bash, zero deps).
 
 Presets:
   academic-research, job-pipeline, engineering
@@ -152,16 +154,18 @@ esac
 # Plugins install globally — once per machine, not per project. Loadout (Layer 2)
 # assumes these exist and delegates engineering execution to them.
 if [[ "$STANDALONE" != "true" ]]; then
-    echo "==> Provisioning Layer 1 (superpowers, GSD, context-mode, claude-mem, skill-creator, frontend-design)"
+    echo "==> Provisioning Layer 1 (superpowers, GSD, context-mode, claude-mem, skill-creator, frontend-design, context7, semgrep)"
     if ! command -v claude >/dev/null 2>&1; then
         echo "  WARNING: 'claude' CLI not found in PATH; skipping Layer 1 provisioning."
         echo "  Layer 2 still installs. To finish later: install Claude Code, then rerun,"
         echo "  or use --standalone to silence this warning."
     else
-        # superpowers, skill-creator, frontend-design live in the default
-        # claude-plugins-official marketplace — no marketplace suffix needed.
-        # gsd, context-mode, claude-mem live in their own marketplace repos,
-        # which must be registered before `claude plugin install` can find them.
+        # superpowers, skill-creator, frontend-design, context7, semgrep all
+        # live in the default claude-plugins-official marketplace (verified
+        # against its marketplace.json — 297 plugins, no separate registration
+        # needed for any of these). gsd, context-mode, claude-mem live in
+        # their own marketplace repos, which must be registered before
+        # `claude plugin install` can find them.
         MARKETPLACES=(
             "jnuyens/gsd-plugin"
             "mksglu/context-mode"
@@ -178,6 +182,8 @@ if [[ "$STANDALONE" != "true" ]]; then
             "claude-mem@thedotmack"
             "skill-creator"
             "frontend-design"
+            "context7"
+            "semgrep"
         )
         for p in "${PLUGINS[@]}"; do
             echo "  installing: $p"

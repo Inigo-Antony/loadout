@@ -1,6 +1,6 @@
 # Plugins to Install
 
-Curated set of Claude Code plugins worth installing — this is Loadout's Layer 1. Source: Nate Herk's "I tried 100+ Claude Code skills, these 6 are the best" plus broader community consensus from ScriptByAI's 2026 list. The default (layered) `install.sh` run provisions this set automatically; `--standalone` skips it.
+Curated set of Claude Code plugins worth installing — this is Loadout's Layer 1. Sources: Nate Herk's "I tried 100+ Claude Code skills, these 6 are the best" and broader community consensus from ScriptByAI's 2026 list (items 1–6); a 2026-09 review of a third-party "10 best Claude Code plugins" roundup, cross-checked against the actual `anthropics/claude-plugins-official` marketplace manifest rather than trusted at face value — the roundup's specific install-count and star claims aren't something the marketplace publishes, so treat those numbers as unverified marketing copy even though the plugins themselves check out real (items 7–8, plus the situational tier below). The default (layered) `install.sh` run provisions items 1–8 automatically; `--standalone` skips it.
 
 > Plugins differ from skills: a skill is a markdown file teaching Claude how to do a job better. A plugin is a larger package that may include multiple skills, hooks, MCP servers, and behavioural changes.
 
@@ -106,6 +106,51 @@ claude plugin marketplace add jnuyens/gsd-plugin
 **When it triggers:** Any UI / web / component work.
 
 **Why install globally:** Frontend work crosses projects; install once.
+
+---
+
+### 7. context7 (Anthropic-marketplace, by Upstash)
+
+**What it does:** Pulls live, version-pinned documentation for a library straight from its source repo into context, instead of Claude answering from training-data memory of whatever API shape was current at cutoff. No overlap with anything else in this stack — none of superpowers, GSD, context-mode, or claude-mem touch external-library currency at all.
+
+**Install:**
+```bash
+/plugin install context7
+```
+(ships in the default `claude-plugins-official` marketplace — confirmed directly against its `marketplace.json`, not the vendor's own docs, which also mention a separate `upstash/context7` marketplace path; the bare form is simpler and is what `install.sh` uses)
+
+**When it triggers:** Any task naming a library or framework by name, especially fast-moving ones (Next.js, Tailwind, LangChain, the Vercel AI SDK, Supabase).
+
+**Cost:** anonymous rate limits apply without an API key (`CONTEXT7_API_KEY` env var); each doc lookup adds tokens and a round-trip. Worth it against the alternative — a fabricated method signature is more expensive to debug than the lookup.
+
+---
+
+### 8. semgrep (Anthropic-marketplace, by Semgrep)
+
+**What it does:** Deterministic SAST/SCA/secrets scanning via Semgrep's real rule engine — a different, complementary layer from superpowers'/GSD's Claude-reasoning-based review, not a duplicate of it. Bundles an MCP server plus a post-tool-use hook that scans changed code automatically after every file write or edit. This is the concrete instantiation `ship-readiness.md`'s Check 1 already asks for generically ("standard SCA/SAST/DAST/secrets scanners") — it names the actual tool instead of leaving the delegation vague.
+
+**Install:**
+```bash
+/plugin install semgrep
+```
+(ships in the default `claude-plugins-official` marketplace — same verification as context7 above)
+
+**When it triggers:** Automatically, on every file write/edit once installed (via its own hook) — not something you invoke manually. `ship-readiness`'s pre-ship gate can point at it explicitly rather than a generic scanner reference.
+
+**Cost:** free OSS rule set covers most cases; Semgrep's paid AppSec platform is a separate, optional upgrade this plugin doesn't require.
+
+---
+
+## Situational — official, but install only if it matches your stack
+
+These are real, officially-listed plugins (verified against `claude-plugins-official`'s manifest directly), not community forks — but each is narrow enough (one platform, one language, one team tool) that making it a default for every install would tax projects that don't use it. Install per-project via `--custom`, or globally if every project you touch fits the same stack.
+
+- **chrome-devtools-mcp** (Google, official partner) — live browser inspection: network, console, DOM, screenshots, Lighthouse audits. Pairs with `frontend-design`: it ships UI, this verifies the rendered result in a real browser. `/plugin install chrome-devtools-mcp@chrome-devtools-plugins` (its own marketplace, not the default one — register first).
+- **playwright** (Microsoft, official) — E2E test authoring and execution. Complementary to chrome-devtools-mcp, not redundant with it: that's live debugging, this is persistent regression coverage. `/plugin install playwright`.
+- **Anthropic LSP pack** — one plugin per language (`typescript-lsp`, `pyright-lsp`, `gopls-lsp`, `rust-analyzer-lsp`, `clangd-lsp`, `csharp-lsp`, `jdtls-lsp`, `kotlin-lsp`, `ruby-lsp`, `swift-lsp`, `php-lsp`, `lua-lsp`, `liquid-lsp` — 13 as of this writing, not the 12 some roundups cite). Real code intelligence (go-to-definition, find-references, diagnostics), not workflow scaffolding — no overlap with anything else here. Install the one matching your `DEFAULT_LANGUAGE` wizard answer: `/plugin install <lang>-lsp`.
+- **pr-review-toolkit** (Anthropic official) — reads and posts to live GitHub PRs/issues directly (pr-test-analyzer, silent-failure-hunter, comment-analyzer agents). Distinct from the built-in `/review`/`/ultra-review` (local diff, no GitHub API) and GSD's code-review (planning-phase-oriented) — this is the one that actually touches GitHub. Worth it only if you live in PRs. `/plugin install pr-review-toolkit`.
+- **linear** (official) — backlog/ticket read-write. Only useful if Linear is your actual system of record. `/plugin install linear`.
+- **vercel** (official) — deploy logs, preview inspection, rollback, env vars. Locked to the Vercel platform; no value on AWS/Cloudflare/self-hosted. `/plugin install vercel`.
 
 ---
 

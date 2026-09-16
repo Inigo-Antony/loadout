@@ -19,6 +19,10 @@ description: Operator standards for UI and web design — taste discovery before
 - Reserve motion for elements that benefit; no autoplaying video, no scroll-jacking, no first-visit modals.
 - Lighthouse ≥ 90 mobile for marketing pages.
 
+## Verification loop
+
+frontend-design ships the UI; it doesn't verify what actually rendered. If `chrome-devtools-mcp` or `playwright` are installed (see `ecosystem/plugins-to-install.md` — situational, not part of the default baseline), close the loop: inspect the real browser output before calling a UI change done, and add a Playwright regression test for anything non-trivial.
+
 ## See also
 
 - `domains/backend-saas.md` — the application behind the UI

@@ -24,7 +24,7 @@ When staging, `git status` may show files already staged that predate this task 
 Delegate the scan; own the decision to run it and the triage of what comes back.
 
 - **Invoke Layer 1 first.** superpowers `/security-review` (reviews pending changes on the branch), `gsd:secure-phase` / the `gsd-security-auditor` (verifies threat-model mitigations exist in code, produces `SECURITY.md`). Don't hand-roll what they already do.
-- **Standard scanner categories** (run the tools, don't emulate them): SCA for dependencies and supply-chain risk, SAST for source flaws (injection, unsafe deserialization), DAST for the running app, and a secrets scan (e.g. `gitleaks`) over the diff *and* history. No single category is sufficient — layer them.
+- **Standard scanner categories** (run the tools, don't emulate them): SCA for dependencies and supply-chain risk, SAST for source flaws (injection, unsafe deserialization), DAST for the running app, and a secrets scan over the diff *and* history. No single category is sufficient — layer them. If the `semgrep` plugin is installed (see `ecosystem/plugins-to-install.md`), it already covers SAST/SCA/secrets via its own post-edit hook — check its findings rather than re-running an equivalent scan by hand.
 - **AI-generated code earns extra scrutiny**, because its dominant failure mode is that nobody read it before it ran:
   - **Package hallucination / slopsquatting** — confirm every imported dependency actually exists, is the package you intended (not a look-alike name), and is pulled from the right registry. A hallucinated name an attacker has since registered is a live supply-chain exploit, not a typo.
   - **Missing input validation** → injection. AI lacks the business context to know what input is legitimate.
